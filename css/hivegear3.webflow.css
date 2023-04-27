@@ -1,0 +1,168 @@
+.w-backgroundvideo-backgroundvideoplaypausebutton:focus-visible {
+  outline-offset: 2px;
+  border-radius: 50%;
+  outline: 2px solid #3b79c3;
+}
+
+.utility-page-wrap {
+  width: 100vw;
+  height: 100vh;
+  max-height: 100%;
+  max-width: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.utility-page-content {
+  width: 260px;
+  text-align: center;
+  flex-direction: column;
+  display: flex;
+}
+
+.utility-page-form {
+  flex-direction: column;
+  align-items: stretch;
+  display: flex;
+}
+
+.intro-header {
+  height: 620px;
+  opacity: 1;
+  color: #fff;
+  background-color: #f4f4f4;
+  background-image: url('../images/vs_code.png');
+  background-position: 0 0;
+  background-size: auto;
+  border-radius: 20px;
+  justify-content: center;
+  align-items: center;
+  margin: 14px 5% 24px;
+  display: flex;
+}
+
+.intro-content {
+  width: 70%;
+  max-width: 1140px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.intro-text {
+  width: 80%;
+  margin-bottom: 35px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.heading-jumbo {
+  opacity: 1;
+  color: #fff;
+  text-transform: none;
+  background-color: #1d2939;
+  background-image: radial-gradient(circle, #000, #141530 100%, #fff);
+  border-radius: 0;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-top: 15px;
+  padding-bottom: 21px;
+  font-family: Lato, sans-serif;
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 80px;
+}
+
+.paragraph-bigger {
+  opacity: 1;
+  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 34px;
+}
+
+.paragraph-bigger.cc-bigger-light {
+  opacity: .96;
+  background-color: #6941c6;
+  border-radius: 13px;
+  font-size: 19px;
+}
+
+.nav-link, .nav-link-2, .nav-link-3 {
+  background-color: #fff;
+  border-radius: 15px;
+  margin-top: 10px;
+  margin-right: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.navbar {
+  background-color: rgba(255, 255, 255, .49);
+}
+
+.background-video {
+  border-radius: 0;
+}
+
+.body {
+  background-image: url('../images/5137894.jpg');
+  background-position: 0 0;
+  background-size: auto;
+}
+
+.image {
+  margin-left: 11px;
+}
+
+.rich-text-block, .rich-text-block-2 {
+  color: #fff;
+}
+
+.container {
+  margin-bottom: 35px;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+@media screen and (max-width: 991px) {
+  .intro-text {
+    width: auto;
+  }
+
+  .heading-jumbo {
+    font-size: 56px;
+    line-height: 70px;
+  }
+
+  .icon {
+    background-color: #fff;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .intro-header {
+    position: relative;
+  }
+
+  .intro-content {
+    width: 80%;
+  }
+
+  .heading-jumbo {
+    font-size: 43px;
+    line-height: 64px;
+  }
+
+  .paragraph-bigger {
+    font-size: 16px;
+    line-height: 28px;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .heading-jumbo {
+    font-size: 100%;
+    line-height: 100%;
+  }
+}
