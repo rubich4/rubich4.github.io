@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPEngine</title>
+    <style>
+        :root {
+            --primary-color: #4a6de5;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --light-bg: #f9f9f9;
+            --code-bg: #282c34;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        nav {
+            background-color: var(--secondary-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            padding: 0.8rem 0;
+        }
+        
+        nav li {
+            margin: 0 1.5rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: var(--accent-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        section {
+            margin-bottom: 3rem;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            margin: 1.5rem 0 1rem 0;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-card h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+        
+        .code-block {
+            background-color: var(--code-bg);
+            color: #f8f8f2;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #3a5bd0;
+        }
+        
+        .btn-secondary {
+            background-color: var(--accent-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #c0392b;
+        }
+        
+        .cta-section {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+            margin: 3rem 0;
+            border-radius: 10px;
+        }
+        
+        .cta-section h2 {
+            color: white;
+            border-bottom: none;
+        }
+        
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+        
+        .demo-container {
+            margin: 2rem 0;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .api-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        
+        .api-table th, .api-table td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .api-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .api-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav li {
+                margin: 0.5rem 0;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>OPEngine</h1>
+            <p>Documentación</p>
+        </div>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#caracteristicas">Características</a></li>
+            <li><a href="#arquitectura">Arquitectura</a></li>
+            <li><a href="#api">API</a></li>
+            <li><a href="#descargas">Instalación</a></li>
+        </ul>
+    </nav>
+    
+    <main class="container">
+        <section id="introduccion">
+            <h2>Introducción</h2>
+            <p>Bienvenido a la documentación oficial de nuestro motor de videojuegos en C++. Este motor ha sido diseñado y programado desde cero por Rubén Gil Fabregat y Pau Badía Villanueva 
+            para la asignatura de Programación de Motores Gráficos.</p>
+        </section>
+        
+        <section id="caracteristicas">
+            <h2>Características Principales</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>Sistema de Renderizado</h3>
+                    <p>Renderizado basado en OpenGL con soporte de las siguientes técnicas:</p>
+                    <ul>
+                        <li>Sistema de iluminación</li>
+                        <li>Técnicas de sombreado: Blinn-Phong</li>
+                        <li>Pipeline de renderizado diferido</li>
+                        <li>Nubes volumétricas y efectos atmosféricos</li>
+                        <li>Ambient Occlusion</li>
+                        <li>Post-procesado avanzado</li>
+                        <li>Soporte para skyboxes</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>Generación de Terreno</h3>
+                    <p>Sistema avanzado de generación de terreno procedural con múltiples capas y alta personalización:</p>
+                    <ul>
+                        <li>Algoritmos de ruido múltiples: Perlin</li>
+                        <li>Mapas de altura con resolución ajustable</li>
+                        <li>Distribución de elementos ambientales</li>
+                        <li>Exportación de mapas de altura y texturas</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>Sistema ECS</h3>
+                    <p>Arquitectura basada en Entity Component System (ECS):</p>
+                    <ul>
+                        <li>Alto rendimiento y paralelización</li>
+                        <li>Organización clara y mantenible</li>
+                        <li>Reutilización de componentes</li>
+                        <li>Escalabilidad</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <section id="arquitectura">
+            <h2>Arquitectura del Motor</h2>
+            <p>Nuestro motor de juegos está diseñado con una arquitectura modular que permite a los desarrolladores utilizar solo los componentes que necesitan para su proyecto específico.</p>
+            
+            <h3>Sistema ECS (Entity Component System)</h3>
+            <p>El núcleo del motor está construido sobre un sistema Entity Component System (ECS) moderno que proporciona:</p>
+            <ul>
+                <li>Alta eficiencia en memoria con agrupación de datos</li>
+                <li>Mejor utilización de la caché del CPU</li>
+                <li>Facilidad para paralelización de tareas</li>
+                <li>Flexibilidad para componer objetos complejos</li>
+            </ul>
+            
+            <div class="code-block">
+                <pre>// Ejemplo de definición de un componente
+struct TransformComponent {
+    Vector3 position;
+    Quaternion rotation;
+    Vector3 scale;
+    
+    // Constructor por defecto
+    TransformComponent() : position(0, 0, 0), rotation(), scale(1, 1, 1) {}
+};
+
+// Creación de una entidad con componentes
+Entity player = entityManager.createEntity();
+player.addComponent<TransformComponent>();
+player.addComponent<RenderComponent>();
+player.addComponent<PhysicsComponent>();
+player.addComponent<PlayerControllerComponent>();</pre>
+            </div>
+            
+            <h3>Sistema de Eventos</h3>
+            <p>Un sistema de eventos potente permite la comunicación desacoplada entre diferentes sistemas del motor:</p>
+            
+            <div class="code-block">
+                <pre>// Definición de un evento
+struct CollisionEvent {
+    Entity entityA;
+    Entity entityB;
+    Vector3 contactPoint;
+    Vector3 normal;
+    float impulse;
+};
+
+// Suscripción a un evento
+eventManager.subscribe&lt;CollisionEvent&gt;([](const CollisionEvent& event) {
+    // Reaccionar al evento de colisión
+    if (event.entityA.hasComponent&lt;DamageableComponent&gt;()) {
+        auto& damageable = event.entityA.getComponent&lt;DamageableComponent&gt;();
+        damageable.applyDamage(event.impulse * 0.5f);
+    }
+});</pre>
+            </div>
+        </section>
+        
+        <section id="api">
+            <h2>Referencia de API</h2>
+            <p>Nuestro motor proporciona una API clara y bien documentada para todos sus subsistemas. A continuación se muestran algunas de las clases y funciones más importantes:</p>
+            
+            <h3>Sistema de Renderizado</h3>
+            <table class="api-table">
+                <tr>
+                    <th>Clase/Función</th>
+                    <th>Descripción</th>
+                </tr>
+                <tr>
+                    <td>Renderer</td>
+                    <td>Clase principal para gestionar el renderizado de la escena</td>
+                </tr>
+                <tr>
+                    <td>Material</td>
+                    <td>Define propiedades de superficie para objetos 3D</td>
+                </tr>
+                <tr>
+                    <td>Shader</td>
+                    <td>Encapsula programas de sombreado GLSL</td>
+                </tr>
+                <tr>
+                    <td>Mesh</td>
+                    <td>Representa geometría 3D con vértices e índices</td>
+                </tr>
+                <tr>
+                    <td>Texture</td>
+                    <td>Gestiona recursos de texturas 2D/3D/Cubemap</td>
+                </tr>
+            </table>
+            
+            <h3>Sistema de Física</h3>
+            <table class="api-table">
+                <tr>
+                    <th>Clase/Función</th>
+                    <th>Descripción</th>
+                </tr>
+                <tr>
+                    <td>PhysicsWorld</td>
+                    <td>Simula y gestiona todos los cuerpos físicos</td>
+                </tr>
+                <tr>
+                    <td>RigidBody</td>
+                    <td>Representa un objeto físico con masa e inercia</td>
+                </tr>
+                <tr>
+                    <td>Collider</td>
+                    <td>Define formas para detección de colisiones</td>
+                </tr>
+                <tr>
+                    <td>Joint</td>
+                    <td>Crea restricciones entre cuerpos físicos</td>
+                </tr>
+                <tr>
+                    <td>PhysicsMaterial</td>
+                    <td>Define propiedades como fricción y rebote</td>
+                </tr>
+            </table>
+        </section>
+        
+        <section id="descargas">
+            <h2>Instalación</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+
+                </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 OpeEngine. Todos los derechos reservados para Rubén Gil Fabregat y Pau Badía Villanueva.</p>
+        </div>
+    </footer>
+</body>
+</html>
