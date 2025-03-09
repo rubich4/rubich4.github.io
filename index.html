@@ -288,34 +288,74 @@
         
         <section id="arquitectura">
             <h2>Arquitectura del Motor</h2>
-            <p>Nuestro motor de juegos está diseñado con una arquitectura modular que permite a los desarrolladores utilizar solo los componentes que necesitan para su proyecto específico.</p>
+
+            <h3>Ventana Gráfica</h3>
+            <div class="code-block">
+                <pre>
+//ENGINE//---------------------------------------------------------------------------------------
+EngineSystem system;
+
+//WINDOW//---------------------------------------------------------------------------------------
+int windowWidth = 800;
+int windowHeight = 600;
+std::string window_name = "Main Window -- Terrain Demo";
+
+auto opt_window = Window::make(1022, 605, window_name, system);
+if (!opt_window) {
+    std::cerr << "Error: Failed to create window." << std::endl;
+    return -1;
+}
+
+//WINDOW VAR//------------------------------------------------------------------------------------
+Window window = std::move(opt_window.value());
+window.makeContext(system);</pre>
+            </div>
+
+            <h3>Input & User Interface</h3>
+            <div class="code-block">
+                <pre>
+//INPUT//-----------------------------------------------------------------------------------------
+Input input(window.getWindow());
+
+//UI//--------------------------------------------------------------------------------------------
+UIRenderer ui(window.getWindow());</pre>
+            </div>
             
+            <h3>Camara</h3>
+            <div class="code-block">
+                <pre>
+//CAMERA//----------------------------------------------------------------------------------------
+Camera camera(&input, glm::vec3(-90.0f, 150.0f, 130.0f),                // posición
+                0.0f,                                                   // yaw
+                -30.0f,                                                 // pitch
+                75.0f,                                                  // fov (campo de visión)
+                windowWidth / windowHeight,                             // relación de aspecto
+                0.1f,                                                   // plano cercano
+                15000.f);                                               // plano lejano</pre>
+            </div>
+
             <h3>Sistema ECS (Entity Component System)</h3>
             <p>El núcleo del motor está construido sobre un sistema Entity Component System (ECS) moderno que proporciona:</p>
-            <ul>
-                <li>Alta eficiencia en memoria con agrupación de datos</li>
-                <li>Mejor utilización de la caché del CPU</li>
-                <li>Facilidad para paralelización de tareas</li>
-                <li>Flexibilidad para componer objetos complejos</li>
-            </ul>
             
             <div class="code-block">
-                <pre>// Ejemplo de definición de un componente
-struct TransformComponent {
-    Vector3 position;
-    Quaternion rotation;
-    Vector3 scale;
-    
-    // Constructor por defecto
-    TransformComponent() : position(0, 0, 0), rotation(), scale(1, 1, 1) {}
-};
+                <pre>
+                // Ejemplo de definición de un componente
+                struct TransformComponent {
+                    Vector3 position;
+                    Quaternion rotation;
+                    Vector3 scale;
+                    
+                    // Constructor por defecto
+                    TransformComponent() : position(0, 0, 0), rotation(), scale(1, 1, 1) {}
+                };
 
-// Creación de una entidad con componentes
-Entity player = entityManager.createEntity();
-player.addComponent<TransformComponent>();
-player.addComponent<RenderComponent>();
-player.addComponent<PhysicsComponent>();
-player.addComponent<PlayerControllerComponent>();</pre>
+                // Creación de una entidad con componentes
+                Entity player = entityManager.createEntity();
+                player.addComponent<TransformComponent>();
+                player.addComponent<RenderComponent>();
+                player.addComponent<PhysicsComponent>();
+                player.addComponent<PlayerControllerComponent>();
+                </pre>
             </div>
             
             <h3>Sistema de Eventos</h3>
