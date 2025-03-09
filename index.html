@@ -321,67 +321,37 @@ Input input(window.getWindow());
 UIRenderer ui(window.getWindow());</pre>
             </div>
             
-            <h3>Camara</h3>
+            <h3>CÁMARA</h3>
             <div class="code-block">
                 <pre>
-//CAMERA//----------------------------------------------------------------------------------------
+//CÁMARA//----------------------------------------------------------------------------------------
 Camera camera(&input, glm::vec3(-90.0f, 150.0f, 130.0f),                // posición
                 0.0f,                                                   // yaw
                 -30.0f,                                                 // pitch
                 75.0f,                                                  // fov (campo de visión)
                 windowWidth / windowHeight,                             // relación de aspecto
                 0.1f,                                                   // plano cercano
-                15000.f);                                               // plano lejano</pre>
+                15000.f);                                               // plano lejano
+            
+//MOVIMIENTO CÁMARA//------------------------------------------------------------------------------
+float deltaTime = system.getDeltaTime();
+camera.update(deltaTime);</pre>
             </div>
 
             <h3>Sistema ECS (Entity Component System)</h3>
-            <p>El núcleo del motor está construido sobre un sistema Entity Component System (ECS) moderno que proporciona:</p>
             
             <div class="code-block">
                 <pre>
-                // Ejemplo de definición de un componente
-                struct TransformComponent {
-                    Vector3 position;
-                    Quaternion rotation;
-                    Vector3 scale;
-                    
-                    // Constructor por defecto
-                    TransformComponent() : position(0, 0, 0), rotation(), scale(1, 1, 1) {}
-                };
-
-                // Creación de una entidad con componentes
-                Entity player = entityManager.createEntity();
-                player.addComponent<TransformComponent>();
-                player.addComponent<RenderComponent>();
-                player.addComponent<PhysicsComponent>();
-                player.addComponent<PlayerControllerComponent>();
-                </pre>
+//CREATE AN ENTITY//------------------------------------------------------------------------------
+Entity Luffy = em.createEntity();
+cm.addComponent(Luffy, ColorComponent{ glm::vec4(1.0, 1.0, 1.0, 1.0), true });
+cm.addComponent(Luffy, TransformComponent{ glm::vec3(40.0f, 50.0f, -50.0f),
+                                            glm::vec3(0.0f, 0.0f, 0.0f),
+                                            glm::vec3(0.5f, 0.5f, 0.5f) });
+cm.addComponent(Luffy, MeshComponent(MeshComponent::loadModel("../assets/obj/luffy.obj")));
+cm.addComponent(Luffy, TextureComponent(TextureComponent::loadTexture("../assets/textures/luffyTexture.png")));</pre>
             </div>
             
-            <h3>Sistema de Eventos</h3>
-            <p>Un sistema de eventos potente permite la comunicación desacoplada entre diferentes sistemas del motor:</p>
-            
-            <div class="code-block">
-                <pre>// Definición de un evento
-struct CollisionEvent {
-    Entity entityA;
-    Entity entityB;
-    Vector3 contactPoint;
-    Vector3 normal;
-    float impulse;
-};
-
-// Suscripción a un evento
-eventManager.subscribe&lt;CollisionEvent&gt;([](const CollisionEvent& event) {
-    // Reaccionar al evento de colisión
-    if (event.entityA.hasComponent&lt;DamageableComponent&gt;()) {
-        auto& damageable = event.entityA.getComponent&lt;DamageableComponent&gt;();
-        damageable.applyDamage(event.impulse * 0.5f);
-    }
-});</pre>
-            </div>
-        </section>
-        
         <section id="api">
             <h2>Referencia de API</h2>
             <p>Nuestro motor proporciona una API clara y bien documentada para todos sus subsistemas. A continuación se muestran algunas de las clases y funciones más importantes:</p>
