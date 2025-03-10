@@ -377,6 +377,29 @@
             text-align: center;
         }
         
+        /* Estilos para los iconos de arquitectura */
+        .architecture-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            fill: none;
+            stroke: var(--primary-color);
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        
+        /* Ajustar el estilo de los botones colapsables para incluir iconos */
+        .collapsible {
+            display: flex;
+            align-items: center;
+        }
+        
+        .icon-title {
+            margin-left: 0;
+            flex-grow: 1;
+        }
+        
         @media (max-width: 768px) {
             nav ul {
                 flex-direction: column;
@@ -396,6 +419,66 @@
             }
         }
     </style>
+    
+    <!-- SVG Definitions para iconos de arquitectura -->
+    <svg style="display: none;">
+        <!-- Icono Ventana Gráfica -->
+        <symbol id="window-icon" viewBox="0 0 24 24">
+            <path d="M4 4h16v16H4V4z M4 8h16 M8 4v16"/>
+        </symbol>
+        
+        <!-- Icono Controles e Interfaz de Usuario -->
+        <symbol id="ui-icon" viewBox="0 0 24 24">
+            <path d="M3 3h18v18H3V3z M7 7h10v2H7V7z M7 12h10v2H7v-2z M7 17h10v2H7v-2z M20 7h1v2h-1V7z M20 12h1v2h-1v-2z M20 17h1v2h-1v-2z"/>
+        </symbol>
+        
+        <!-- Icono Cámara Principal -->
+        <symbol id="camera-icon" viewBox="0 0 24 24">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2v11z"/>
+            <circle cx="12" cy="13" r="4"/>
+        </symbol>
+        
+        <!-- Icono Sistema ECS -->
+        <symbol id="ecs-icon" viewBox="0 0 24 24">
+            <rect x="2" y="2" width="6" height="6" rx="1"/>
+            <rect x="2" y="10" width="6" height="6" rx="1"/>
+            <rect x="2" y="18" width="6" height="4" rx="1"/>
+            <rect x="10" y="2" width="6" height="6" rx="1"/>
+            <rect x="10" y="10" width="6" height="12" rx="1"/>
+            <rect x="18" y="2" width="4" height="20" rx="1"/>
+        </symbol>
+        
+        <!-- Icono Skyboxes -->
+        <symbol id="skybox-icon" viewBox="0 0 24 24">
+            <path d="M12 2 L2 6 L2 18 L12 22 L22 18 L22 6 L12 2 Z"/>
+            <path d="M12 2 L12 22"/>
+            <path d="M2 6 L12 10 L22 6"/>
+            <path d="M2 18 L12 14 L22 18"/>
+        </symbol>
+        
+        <!-- Icono Generación de Terrenos -->
+        <symbol id="terrain-icon" viewBox="0 0 24 24">
+            <path d="M1 18 L5 12 L9 18 Z"/>
+            <path d="M8 18 L12 8 L16 18 Z"/>
+            <path d="M15 18 L19 13 L23 18 Z"/>
+            <path d="M1 18 L23 18"/>
+        </symbol>
+        
+        <!-- Icono Renderizado Diferido -->
+        <symbol id="render-icon" viewBox="0 0 24 24">
+            <path d="M4 4 h16 v16 h-16 z"/>
+            <path d="M14 4 v4 h4"/>
+            <path d="M8 10 h8 v8 h-8 z"/>
+            <path d="M8 10 l8 8"/>
+            <path d="M16 10 l-8 8"/>
+        </symbol>
+        
+        <!-- Icono Bucle Principal -->
+        <symbol id="loop-icon" viewBox="0 0 24 24">
+            <path d="M21.5 2v6h-6M2.5 22v-6h6"/>
+            <path d="M22 12c0 5-4.5 8-10 8s-8.5-3-8.5-8 3-8 8.5-8 8.5 3 10 8z"/>
+        </symbol>
+    </svg>
 </head>
 <body>
     <header>
@@ -496,7 +579,12 @@
         <section id="arquitectura">
             <h2>Arquitectura del Motor</h2>
 
-            <button class="collapsible">VENTANA GRÁFICA</button>
+            <button class="collapsible">
+                <svg class="architecture-icon">
+                    <use href="#window-icon"></use>
+                </svg>
+                <span class="icon-title">VENTANA GRÁFICA</span>
+            </button>
             <div class="collapsible-content">
                 <div class="code-block">
                     <pre>
@@ -520,7 +608,12 @@ window.makeContext(system);</pre>
                 </div>
             </div>
 
-            <button class="collapsible">CONTROLES & INTERFAZ USUARIO</button>
+            <button class="collapsible">
+                <svg class="architecture-icon">
+                    <use href="#ui-icon"></use>
+                </svg>
+                <span class="icon-title">CONTROLES & INTERFAZ USUARIO</span>
+            </button>
             <div class="collapsible-content">
                 <div class="code-block">
                     <pre>
@@ -532,7 +625,12 @@ UIRenderer ui(window.getWindow());</pre>
                 </div>
             </div>
             
-            <button class="collapsible">CÁMARA PRINCIPAL</button>
+            <button class="collapsible">
+                <svg class="architecture-icon">
+                    <use href="#camera-icon"></use>
+                </svg>
+                <span class="icon-title">CÁMARA PRINCIPAL</span>
+            </button>
             <div class="collapsible-content">
                 <div class="code-block">
                     <pre>
@@ -551,7 +649,12 @@ camera.update(deltaTime);</pre>
                 </div>
             </div>
 
-            <button class="collapsible">SISTEMA ECS</button>
+            <button class="collapsible">
+                <svg class="architecture-icon">
+                    <use href="#ecs-icon"></use>
+                </svg>
+                <span class="icon-title">SISTEMA ECS</span>
+            </button>
             <div class="collapsible-content">
                 <div class="code-block">
                     <pre>
@@ -575,10 +678,15 @@ TextureComponent* texc = cm.getComponent<TextureComponent>(Luffy);</pre>
                 </div>
             </div>
 
-        <button class="collapsible">SKYBOXES</button>
-        <div class="collapsible-content">
-            <div class="code-block">
-                <pre>
+            <button class="collapsible">
+                <svg class="architecture-icon">
+                    <use href="#skybox-icon"></use>
+                </svg>
+                <span class="icon-title">SKYBOXES</span>
+            </button>
+            <div class="collapsible-content">
+                <div class="code-block">
+                    <pre>
 //SKYBOXES//----------------------------------------------------------------------------------------
 SkyboxManager skyboxManager;
 
@@ -607,10 +715,15 @@ renderSystem.skyboxSelector = 1;
 
 //ASOCIAR SKYBOX MANAGER AL RENDER//---------------------------------------------------------------
 renderSystem.render(em, cm, "renderShader...", skyboxManager, camera);</pre>
+                </div>
             </div>
-        </div>
 
-            <button class="collapsible">GENERACIÓN DE TERRENOS</button>
+            <button class="collapsible">
+                <svg class="architecture-icon">
+                    <use href="#terrain-icon"></use>
+                </svg>
+                <span class="icon-title">GENERACIÓN DE TERRENOS</span>
+            </button>
             <div class="collapsible-content">
                 <div class="code-block">
                     <pre>
@@ -636,6 +749,10 @@ cm.addComponent(h_map, TextureComponent(TextureComponent::loadTexture("../assets
 //GENERACIÓN DE ASSETS EN UN TERRENO//----------------------------------------------------------------
 MeshData palm = MeshComponent::loadModel("../assets/obj/palm.obj");
 std::shared_ptr<TextureImage> palmTexture = std::make_shared<TextureImage>(TextureComponent::loadTexture("../assets/textures/palmTexture.png"));
+Generation gen(em, cm, h_map, palm, glm::vec3(3.0f, 4.0f, 3.0f), palmTexture, glm::vec2(4.0f, 11.0f),
+
+MeshData palm = MeshComponent::loadModel("../assets/obj/palm.obj");
+std::shared_ptr<TextureImage> palmTexture = std::make_shared<TextureImage>(TextureComponent::loadTexture("../assets/textures/palmTexture.png"));
 Generation gen(em, cm, h_map, palm, glm::vec3(3.0f, 4.0f, 3.0f), palmTexture, glm::vec2(4.0f, 11.0f), 20);
 
 MeshData grass = MeshComponent::loadModel("../assets/obj/grass.obj");
@@ -644,10 +761,15 @@ Generation gen2(em, cm, h_map, grass, glm::vec3(3.0f, 7.5f, 3.0f), grassTexture,
                 </div>
             </div>
 
-        <button class="collapsible">RENDERIZADO DIFERIDO</button>
-        <div class="collapsible-content">
-            <div class="code-block">
-                <pre>
+            <button class="collapsible">
+                <svg class="architecture-icon">
+                    <use href="#render-icon"></use>
+                </svg>
+                <span class="icon-title">RENDERIZADO DIFERIDO</span>
+            </button>
+            <div class="collapsible-content">
+                <div class="code-block">
+                    <pre>
 //INICIALIZAR//------------------------------------------------------------------------------------                
 RenderSystem renderSystem(false, windowWidth, windowHeight);
 
@@ -661,13 +783,18 @@ std::shared_ptr<Shader> skyboxShader = std::make_shared<Shader>("../shaders/vert
 std::shared_ptr<Shader> cloudShader = std::make_shared<Shader>("../shaders/vertex/cloudShader.vs", "../shaders/fragment/cloudShader.fs");
 
 renderSystem.render(em, cm, geometryShader, lightShader, shadowShader, ssaoShader, ssaoBlurShader, skyboxShader, cloudShader, skyboxManager, camera);</pre>
+                </div>
             </div>
-        </div>
 
-        <button class="collapsible">BUCLE PRINCIPAL</button>
-        <div class="collapsible-content">
-            <div class="code-block">
-                <pre>
+            <button class="collapsible">
+                <svg class="architecture-icon">
+                    <use href="#loop-icon"></use>
+                </svg>
+                <span class="icon-title">BUCLE PRINCIPAL</span>
+            </button>
+            <div class="collapsible-content">
+                <div class="code-block">
+                    <pre>
 //MAIN LOOP//---------------------------------------------------------------------------------------
 while (window.isOpen()) {
 
@@ -710,10 +837,10 @@ while (window.isOpen()) {
     window.swapBuffers();
     window.pollEvents();
 }</pre>
+                </div>
             </div>
-        </div>
 
-    </section>
+        </section>
             
         <section id="api">
             <h2>Referencia de API</h2>
