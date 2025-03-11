@@ -118,7 +118,7 @@
         }
         
         .feature-card h3 {
-            color: var(--primary-color);
+            color: rgb(18, 17, 17);
             margin-top: 0;
         }
         
@@ -595,7 +595,7 @@
     <main class="container">
         <section id="introduccion">
             <h2>Introducción</h2>
-            <p>Bienvenido a la documentación oficial de nuestro motor de videojuegos en C++. Este motor ha sido diseñado y programado desde cero por Rubén Gil Fabregat y Pau Badía Villanueva 
+            <p>Bienvenido a la documentación oficial de nuestro motor de videojuegos <strong>OPE</strong> en C++. Este motor ha sido diseñado y programado desde cero por Rubén Gil Fabregat y Pau Badía Villanueva 
             para la asignatura de Programación de Motores Gráficos. Contacto: <strong>gilfa@esat-alumni.com</strong> / <strong>badiavi@esat-alumni.com</strong></p>
         </section>
         
@@ -714,7 +714,7 @@ window.makeContext(system);</pre>
             </button>
             <div class="collapsible-content">
                 <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">Para poder utilizar las funcionalidades de input, es necesario declarar un clase <strong>[Input]</strong> y asignarle la ventana
-                que tiene en contexto el sistema del motor. De la misma forma con la clase <strong>[UIRenderer]</strong>. Estas variables inicialidas serán necesarias más adelante por otros subsistemas.</p>
+                que tiene en contexto el sistema del motor. De la misma forma con la clase <strong>[UIRenderer]</strong>. Estas variables inicialidas serán necesarias más adelante para otros subsistemas.</p>
                 <div class="code-block">
                     <pre>
 //INPUT//-----------------------------------------------------------------------------------------
@@ -736,7 +736,7 @@ UIRenderer ui(window.getWindow());</pre>
                     y asignarla a la cámara junto a los demás parámetros de inicialización. Para utilizar dicha cámara como vista en la escena, será necesario asociarla al <strong>[RenderSystem]</strong>.</p>
 
                 <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">Por otro lado, el movimiento de Flycam puede ser activado, utilizando el método <strong>[camera.update()]</strong> en el Main Loop. 
-                    Para poder desbloquear la rotación de la cámara es necesario pulsar la tecla <strong>[SHIFT]</strong> y para el movimiento normal <strong>[WASD]</strong>. La intensidad del <strong>[SSAO]</strong> también se encuentra en la cámara.</p>
+                    Para poder desbloquear la rotación de la cámara es necesario pulsar la tecla <strong>[SHIFT]</strong> y para el movimiento normal <strong>[WASD]</strong>. La intensidad del <strong>[SSAO]</strong> se ajusta desde la cámara.</p>
                 <div class="code-block">
                     <pre>
 //CÁMARA//----------------------------------------------------------------------------------------
@@ -769,6 +769,13 @@ camera.update(deltaTime);</pre>
             <div class="collapsible-content">
                 <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">Creación y gestión de entidades. Para poder utilizar las herramientas ECS, es necesario crear una variable de tipo <strong>[EntityManager]</strong>
                 y otra de tipo <strong>[ComponentManager]</strong>, la primera permitirá crear entidades y la segunda añadir/obtener componentes de dichas entidades.</p> 
+
+                <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">Para añadirle a una entidad una malla cargada desde el dispositivo, deberemos utilizar el método estático <strong>[MeshComponent::loadModel()]</strong>.
+                Está función nos devuelve una variable <strong>[MeshData]</strong>, necesaria para la construcción de una variable de tipo malla, <strong>[MeshComponent(MeshData)]</strong>, una vez este componente esté inicializado se puede añadir a la entidad con
+                la función <strong>[cm.addComponent(Entidad, &ltComponente&gt)]</strong>.</p> 
+                
+                
+                <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;"></p>Si a una entidad se le añaden varios componentes del mismo tipo, se utilizará el último componente añadido.</p> 
                 
                 <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">Es importante tener en cuenta que los componentes se deben obtener preferiblemente en el Main Loop.</p>
                 <div class="code-block">
@@ -777,7 +784,7 @@ camera.update(deltaTime);</pre>
 EntityManager em;
 ComponentManager cm;
 
-//CREAR UNA ENTIDAD//------------------------------------------------------------------------------
+//CREAR UNA ENTIDAD RENDERIZABLE//------------------------------------------------------------------
 Entity Luffy = em.createEntity();
 cm.addComponent(Luffy, ColorComponent{ glm::vec4(1.0, 1.0, 1.0, 1.0), true });
 cm.addComponent(Luffy, TransformComponent{ glm::vec3(40.0f, 50.0f, -50.0f),
@@ -848,7 +855,7 @@ renderSystem.render(em, cm, "renderShader...", skyboxManager, camera);</pre>
                  <strong>[heightmap.generateHeightmap()]</strong>, esto generará una imagen de heightmap guardada en nuestro dispositivo, también podemos hacerlo respectivamente con el colormap del terreno 
                  utilizando <strong>[heightmap.generateColorMap()]</strong>, esto generará una textura que al asignarla al terreno dará un color por alturas.</p> 
 
-                 <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">La segunda sección consiste en transformar la imagen heightmap generada previamente en una maya de terreno, para lograr esta función es necesario
+                 <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">La segunda sección consiste en transformar la imagen heightmap generada previamente en una malla de terreno, para lograr esta función es necesario
                     leer el archivo imagen heightmap del dispositivo y almacenarlo en una variable de tipo <strong>[TextureImage]</strong>, una vez hecho esto, al añadir un componente <strong>[Mesh]</strong> en lugar de cargar un modelo, hay que utilizar el
                     método estático <strong>[MeshComponent::loadHeightMap()]</strong>.
                  </p> 
@@ -896,12 +903,26 @@ Generation gen2(em, cm, h_map, grass, glm::vec3(3.0f, 7.5f, 3.0f), grassTexture,
                 <span class="icon-title">RENDERIZADO DIFERIDO</span>
             </button>
             <div class="collapsible-content">
+                <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">Sistema de renderizado principal. Todas las entidades que tengan los siguientes componentes serán renderizadas en la escena:
+                    <strong>[ColorComponent], [TransformComponent], [MeshComponent] y [TextureComponent]</strong>. Si falta algún componente mencionado anteriormente la entidad respectiva no se renderizará. 
+                    Si se desea que una entidad no genere sombra, <strong>ColorComponent{ glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), <strong>castShadow = false</strong>};</strong>
+                </p>
+
+                <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">El motor da soporte a los <strong>[OPE Default Shaders]</strong>, estos shaders son esenciales al momento de realizar el renderizado,
+                    es posible utilizar shaders customizados pero se recomienda el uso de los nativos del motor. Estos se incluyen en la siguiente ruta: <strong>"../shaders/vertex/vsShader"</strong> y <strong>"../shaders/fragment/fsShader"</strong>.</p>
+                    
+                <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">Si se desea utilizar un shader específico para calcular el albedo de una entidad, existe <strong>[CustomShaderComponent]</strong>,
+                    si dicha entidad lleva este componente, el <strong>[GeometryShader]</strong> del motor será sobreescrito a la hora de renderizar dicha entidad por el shader personalizado correspondiente. El shader debe de tener
+                    una estructura similiar al shader de geometría para escribir en los gBuffers adecuadamente, de lo contrario, no se trasmitirá en el resultado.</p>
+                    
+                    <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;"></p><strong>!!!</strong><strong>[CustomShaderComponent]</strong> se encuentra en fase de desarrollo, consultar con los desarrolladores<strong>!!!</strong></p>
+
                 <div class="code-block">
                     <pre>
 //INICIALIZAR//------------------------------------------------------------------------------------                
 RenderSystem renderSystem(false, windowWidth, windowHeight);
 
-//SHADERS RENDER SYSTEM//--------------------------------------------------------------------------
+//OPE DEFAULT SHADERS RENDER SYSTEM//--------------------------------------------------------------
 std::shared_ptr<Shader> geometryShader = std::make_shared<Shader>("../shaders/vertex/geometrypassDeferredRendering.vs", "../shaders/fragment/geometrypassDeferredRendering.fs");
 std::shared_ptr<Shader> lightShader = std::make_shared<Shader>("../shaders/vertex/lightpassDeferredRendering.vs", "../shaders/fragment/lightpassDeferredRendering.fs");
 std::shared_ptr<Shader> shadowShader = std::make_shared<Shader>("../shaders/vertex/pointShadowPass.vs", "../shaders/fragment/pointShadowPass.fs", "../shaders/geometry/pointShadowPass.gs");
@@ -911,7 +932,13 @@ std::shared_ptr<Shader> skyboxShader = std::make_shared<Shader>("../shaders/vert
 std::shared_ptr<Shader> cloudShader = std::make_shared<Shader>("../shaders/vertex/cloudShader.vs", "../shaders/fragment/cloudShader.fs");
 
 //MAIN LOOP//--------------------------------------------------------------------------------------  
-renderSystem.render(em, cm, geometryShader, lightShader, shadowShader, ssaoShader, ssaoBlurShader, skyboxShader, cloudShader, skyboxManager, camera);</pre>
+renderSystem.render(em, cm, geometryShader, lightShader, shadowShader, ssaoShader, ssaoBlurShader, skyboxShader, cloudShader, skyboxManager, camera);
+
+//CUSTOM GEOMETRY SHADER//------------------------------------------------------------------------------------  
+std::shared_ptr<Shader> oceanShader = std::make_shared<Shader>("../shaders/vertex/oceanShader.vs", "../shaders/fragment/oceanShader.fs");
+
+cm.addComponent(ocean, CustomShaderComponent(oceanShader, TextureComponent(TextureComponent::loadTexture("../assets/heightmaps/image.png")), 
+                                                          TextureComponent(TextureComponent::loadTexture("../assets/normalMaps/water_normal.jpg"))));</pre>
                 </div>
             </div>
 
