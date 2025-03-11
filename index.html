@@ -979,56 +979,519 @@ while (window.isOpen()) {
                     <th>Clase/Función</th>
                     <th>Descripción</th>
                 </tr>
-                <tr class="expandable-row" onclick="toggleDetails('renderer')">
-                    <td>Renderer</td>
-                    <td>Clase principal para gestionar el renderizado de la escena</td>
+
+                <tr class="expandable-row" onclick="toggleDetails('branching')">
+                    <td>Branching</td>
+                    <td>Estructura para gestión de ramas de audio</td>
                 </tr>
-                <tr id="renderer" class="details-row">
+                <tr id="branching" class="details-row">
                     <td colspan="2">
                         <div class="details-content">
                             <h3>Variables:</h3>
                             <ul>
-                                <li><code>canvas</code> - Elemento HTML Canvas para renderizar</li>
-                                <li><code>context</code> - Contexto WebGL</li>
-                                <li><code>width</code> - Ancho del viewport</li>
-                                <li><code>height</code> - Alto del viewport</li>
-                            </ul>
-                            <h3>Métodos:</h3>
-                            <ul>
-                                <li><code>initialize(canvas)</code> - Inicializa el renderizador con un canvas</li>
-                                <li><code>setSize(width, height)</code> - Establece el tamaño del viewport</li>
-                                <li><code>render(scene, camera)</code> - Renderiza una escena con una cámara</li>
-                                <li><code>clear()</code> - Limpia el buffer de renderizado</li>
+                                <li><code>state</code> - Estado actual de la rama</li>
+                                <li><code>branching_state</code> - Estado de ramificación</li>
+                                <li><code>branching_interp_state</code> - Estado de interpolación</li>
+                                <li><code>branching_interp_buffer_index</code> - Índice del buffer de interpolación</li>
+                                <li><code>interpolate</code> - Si se debe interpolar entre estados</li>
+                                <li><code>playbranching</code> - Si se debe reproducir la ramificación</li>
+                                <li><code>initplaybranching</code> - Inicialización de la reproducción</li>
+                                <li><code>sourceForBranching</code> - Fuente de audio para ramificación</li>
+                                <li><code>buffersProcessed</code> - Buffers procesados</li>
+                                <li><code>currentBufferIndex</code> - Índice del buffer actual</li>
+                                <li><code>nextBufferIndex</code> - Índice del siguiente buffer</li>
                             </ul>
                         </div>
                     </td>
                 </tr>
-                
-                <tr class="expandable-row" onclick="toggleDetails('material')">
-                    <td>Material</td>
-                    <td>Define propiedades de superficie para objetos 3D</td>
+
+                <tr class="expandable-row" onclick="toggleDetails('camera')">
+                    <td>Camera</td>
+                    <td>Maneja la vista y proyección en la escena 3D</td>
                 </tr>
-                <tr id="material" class="details-row">
+                <tr id="camera" class="details-row">
                     <td colspan="2">
                         <div class="details-content">
                             <h3>Variables:</h3>
                             <ul>
-                                <li><code>type</code> - Tipo de material (básico, phong, etc.)</li>
-                                <li><code>color</code> - Color base del material</li>
-                                <li><code>opacity</code> - Nivel de opacidad (0-1)</li>
-                                <li><code>transparent</code> - Si el material es transparente</li>
+                                <li><code>position</code> - Posición de la cámara en el espacio 3D</li>
+                                <li><code>front</code> - Vector dirección hacia donde mira la cámara</li>
+                                <li><code>up</code> - Vector "arriba" de la cámara</li>
+                                <li><code>right</code> - Vector perpendicular a front y up</li>
+                                <li><code>worldUp</code> - Vector global "arriba"</li>
+                                <li><code>yaw</code> - Rotación en el eje Y (horizontal)</li>
+                                <li><code>pitch</code> - Rotación en el eje X (vertical)</li>
+                                <li><code>fov</code> - Campo de visión en grados</li>
+                                <li><code>aspectRatio</code> - Relación de aspecto de la pantalla</li>
+                                <li><code>nearPlane</code> - Plano cercano de recorte</li>
+                                <li><code>farPlane</code> - Plano lejano de recorte</li>
+                                <li><code>cameraSpeed</code> - Velocidad de movimiento</li>
+                                <li><code>mouseSensitivity</code> - Sensibilidad del ratón</li>
+                                <li><code>ambientOclussionStrenght</code> - Intensidad del SSAO</li>
                             </ul>
                             <h3>Métodos:</h3>
                             <ul>
-                                <li><code>setColor(r, g, b)</code> - Establece el color RGB</li>
-                                <li><code>setOpacity(value)</code> - Establece la opacidad</li>
-                                <li><code>setTexture(texture)</code> - Asigna una textura</li>
-                                <li><code>clone()</code> - Crea una copia del material</li>
+                                <li><code>Camera(input, position, yaw, pitch, fov, aspectRatio, nearPlane, farPlane)</code> - Constructor</li>
+                                <li><code>getViewMatrix()</code> - Obtiene la matriz de vista</li>
+                                <li><code>getProjectionMatrix()</code> - Obtiene la matriz de proyección</li>
+                                <li><code>move(direction, delta)</code> - Mueve la cámara en una dirección</li>
+                                <li><code>rotate(deltaYaw, deltaPitch)</code> - Rota la cámara</li>
+                                <li><code>update(delta)</code> - Actualiza la cámara según input</li>
+                                <li><code>getPosition()</code> - Obtiene la posición actual</li>
                             </ul>
                         </div>
                     </td>
                 </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('characterController')">
+                    <td>CharacterController</td>
+                    <td>Controla el movimiento de personajes</td>
+                </tr>
+                <tr id="characterController" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>entity</code> - Entidad asociada al controlador</li>
+                                <li><code>input</code> - Puntero al sistema de entrada</li>
+                                <li><code>componentManager</code> - Puntero al gestor de componentes</li>
+                                <li><code>transform</code> - Puntero al componente de transformación</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>CharacterController(entity, cm, input)</code> - Constructor</li>
+                                <li><code>move()</code> - Mueve el personaje según el input</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('colorComponent')">
+                    <td>ColorComponent</td>
+                    <td>Componente para almacenar información de color</td>
+                </tr>
+                <tr id="colorComponent" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>value</code> - Vector de color RGBA</li>
+                                <li><code>castShadow</code> - Si el objeto proyecta sombras</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>ColorComponent()</code> - Constructor por defecto (blanco)</li>
+                                <li><code>ColorComponent(v, castShadow)</code> - Constructor con valores</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('componentManager')">
+                    <td>ComponentManager</td>
+                    <td>Gestiona los componentes asociados a entidades</td>
+                </tr>
+                <tr id="componentManager" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>componentPools</code> - Mapa de pools de componentes por tipo</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>addComponent(entity, component)</code> - Añade un componente a una entidad</li>
+                                <li><code>getComponent&lt;T&gt;(entity)</code> - Obtiene un componente específico de una entidad</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('customShaderComponent')">
+                    <td>CustomShaderComponent</td>
+                    <td>Componente para shaders personalizados</td>
+                </tr>
+                <tr id="customShaderComponent" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>shader</code> - Puntero compartido al shader</li>
+                                <li><code>texture1</code> - Primera textura para el shader</li>
+                                <li><code>texture2</code> - Segunda textura para el shader</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>CustomShaderComponent(shaderPtr, texture1, texture2)</code> - Constructor</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('engineSystem')">
+                    <td>EngineSystem</td>
+                    <td>Sistema principal del motor gráfico</td>
+                </tr>
+                <tr id="engineSystem" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>lastFrameTime</code> - Tiempo del último frame</li>
+                                <li><code>frameCount</code> - Contador de frames</li>
+                                <li><code>lastFPSUpdateTime</code> - Último tiempo de actualización de FPS</li>
+                                <li><code>fps</code> - Frames por segundo</li>
+                                <li><code>time</code> - Tiempo transcurrido</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>EngineSystem()</code> - Constructor</li>
+                                <li><code>initialize(window)</code> - Inicializa el sistema con una ventana</li>
+                                <li><code>enableVSync()</code> - Activa la sincronización vertical</li>
+                                <li><code>disableVSync()</code> - Desactiva la sincronización vertical</li>
+                                <li><code>getTime()</code> - Obtiene el tiempo actual</li>
+                                <li><code>getDeltaTime()</code> - Obtiene el tiempo entre frames</li>
+                                <li><code>getRandomNumber(min, max)</code> - Genera un número aleatorio</li>
+                                <li><code>getRandomColorRGBA()</code> - Genera un color aleatorio</li>
+                                <li><code>displayFPS()</code> - Muestra y calcula los FPS</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('entityManager')">
+                    <td>EntityManager</td>
+                    <td>Sistema de gestión de entidades del patrón ECS</td>
+                </tr>
+                <tr id="entityManager" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>entityCount</code> - Contador de entidades creadas</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>createEntity()</code> - Crea y devuelve un identificador de entidad</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('forwardRenderSystem')">
+                    <td>ForwardRenderSystem</td>
+                    <td>Sistema de renderizado forward</td>
+                </tr>
+                <tr id="forwardRenderSystem" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>shadowMapFBO</code> - Framebuffer para mapa de sombras</li>
+                                <li><code>shadowMap</code> - Textura de mapa de sombras</li>
+                                <li><code>shadowCubeFBO</code> - Framebuffer para mapa de sombras cúbico</li>
+                                <li><code>shadowCubeMap</code> - Textura de sombra cúbica</li>
+                                <li><code>spotShadowFBO</code> - Framebuffer para sombras de foco</li>
+                                <li><code>spotShadowMap</code> - Mapa de sombras para luces de foco</li>
+                                <li><code>SHADOW_WIDTH</code>, <code>SHADOW_HEIGHT</code> - Resolución de mapas de sombras</li>
+                                <li><code>windowWidth</code>, <code>windowHeight</code> - Dimensiones de la ventana</li>
+                                <li><code>bSkybox</code> - Activa/desactiva el skybox</li>
+                                <li><code>skyboxSelector</code> - Selector de skybox</li>
+                                <li><code>near_plane</code>, <code>far_plane</code> - Planos de recorte para sombras</li>
+                                <li><code>cutOff</code> - Ángulo de corte para luces de foco</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>ForwardRenderSystem(windowWidth, windowHeight)</code> - Constructor</li>
+                                <li><code>forwardRender(em, componentManager, lightShader, shadowShader, camera, lightSpaceMatrix, skyboxShader, skyboxManager)</code> - Renderiza la escena</li>
+                                <li><code>GetLightSpaceMatrix(lightPos, lightType, lightDirection)</code> - Obtiene la matriz de luz</li>
+                                <li><code>RenderDepthMap(em, componentManager, shadowShader, lightSpaceMatrix)</code> - Renderiza el mapa de profundidad</li>
+                                <li><code>shadowPass(em, componentManager, shadowShader)</code> - Pasa de sombras</li>
+                                <li><code>createShadowMapCube(resolution)</code> - Crea un mapa de sombras cúbico</li>
+                                <li><code>CreateSpotLightShadowMap()</code> - Crea mapa de sombras para spotlight</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('generation')">
+                    <td>Generation</td>
+                    <td>Distribuye assets en un terreno según altura</td>
+                </tr>
+                <tr id="generation" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>Generation(em, cm, entity, asset, scale, texture, heightRange, totalAssets)</code> - Constructor que distribuye los assets</li>
+                                <li><code>selectVerticesByCount(vertices, totalAssets)</code> - Selecciona vértices para colocar assets</li>
+                                <li><code>placeAssetAtPoint(em, cm, asset, scale, texture, point)</code> - Coloca un asset en la posición indicada</li>
+                                <li><code>getRandomNumber(min, max)</code> - Genera un número aleatorio en un rango</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr> 
                 
+                <tr class="expandable-row" onclick="toggleDetails('glManager')">
+                    <td>GLManager</td>
+                    <td>Administrador básico de OpenGL</td>
+                </tr>
+                <tr id="glManager" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>GLManager()</code> - Constructor</li>
+                                <li><code>defaultView()</code> - Establece la vista por defecto</li>
+                                <li><code>drawTriangle(centerX, centerY, size, rotationAngle)</code> - Dibuja un triángulo</li>
+                                <li><code>~GLManager()</code> - Destructor</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('heightmapGenerator')">
+                    <td>HeightmapGenerator</td>
+                    <td>Genera mapas de altura para terrenos</td>
+                </tr>
+                <tr id="heightmapGenerator" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>width</code>, <code>height</code> - Dimensiones del mapa de altura</li>
+                                <li><code>data</code> - Datos del mapa de altura</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>HeightmapGenerator(width, height)</code> - Constructor</li>
+                                <li><code>generateHeightmap(scale, octaves, persistence, lacunarity)</code> - Genera un mapa de altura con ruido Perlin</li>
+                                <li><code>applyIslandMask(islandFactor)</code> - Aplica una máscara para crear islas</li>
+                                <li><code>generateColorMap()</code> - Genera un mapa de color basado en altura</li>
+                                <li><code>saveAsImage(filename)</code> - Guarda el mapa de altura como imagen</li>
+                                <li><code>saveColorMapAsImage(filename, colorMap, width, height)</code> - Guarda el mapa de color como imagen</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('input')">
+                    <td>Input</td>
+                    <td>Sistema de entrada para teclado y ratón</td>
+                </tr>
+                <tr id="input" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>keys</code> - Mapa de teclas asignadas</li>
+                                <li><code>window_</code> - Puntero a la ventana GLFW</li>
+                                <li><code>keyStates</code> - Estados actuales de las teclas</li>
+                                <li><code>previousKeyStates</code> - Estados previos de las teclas</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>Input(window)</code> - Constructor</li>
+                                <li><code>isKeyUp(action)</code> - Verifica si una tecla está sin pulsar</li>
+                                <li><code>isKeyDown(action)</code> - Verifica si una tecla está pulsada</li>
+                                <li><code>isKeyPressed(action)</code> - Verifica si una tecla se acaba de pulsar</li>
+                                <li><code>isKeyReleased(action)</code> - Verifica si una tecla se acaba de soltar</li>
+                                <li><code>assign(Keys, action)</code> - Asigna una tecla a una acción</li>
+                                <li><code>updateKeyStates()</code> - Actualiza el estado de las teclas</li>
+                                <li><code>key_callback(key, scancode, action, mods)</code> - Callback para eventos de teclado</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('jobSystem')">
+                    <td>JobSystem</td>
+                    <td>Sistema de trabajos paralelos</td>
+                </tr>
+                <tr id="jobSystem" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>mutex_</code> - Mutex para sincronización</li>
+                                <li><code>tasks_</code> - Cola de tareas pendientes</li>
+                                <li><code>worker_update_</code> - Variable de condición para notificar a los trabajadores</li>
+                                <li><code>quit_</code> - Flag para señalar finalización</li>
+                                <li><code>workers_</code> - Vector de hilos trabajadores</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>JobSystem()</code> - Constructor</li>
+                                <li><code>~JobSystem()</code> - Destructor</li>
+                                <li><code>add_task(f, args...)</code> - Añade una tarea a la cola</li>
+                                <li><code>add_implementation(f)</code> - Implementación interna para añadir tareas</li>
+                                <li><code>run_tasks()</code> - Ejecuta las tareas pendientes</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('lightComponent')">
+                    <td>LightComponent</td>
+                    <td>Componente para fuentes de luz en la escena</td>
+                </tr>
+                <tr id="lightComponent" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>type</code> - Tipo de luz (Point, Directional, Spot)</li>
+                                <li><code>direction</code> - Dirección de la luz</li>
+                                <li><code>ambient</code> - Color/intensidad de luz ambiental</li>
+                                <li><code>diffuse</code> - Color/intensidad de luz difusa</li>
+                                <li><code>specular</code> - Color/intensidad de luz especular</li>
+                                <li><code>constant</code>, <code>linear</code>, <code>quadratic</code> - Factores de atenuación</li>
+                                <li><code>cutOff</code>, <code>outerCutOff</code> - Ángulos para luces de tipo spot</li>
+                                <li><code>strength</code> - Intensidad general de la luz</li>
+                                <li><code>bias</code> - Corrección para sombras</li>
+                                <li><code>maxDistance</code> - Distancia máxima de influencia</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>LightComponent(lightType, dir, amb, diff, spec, cons, lin, quad, cut, outerCut, strength, maxDistance, bias)</code> - Constructor</li>
+                                <li><code>~LightComponent()</code> - Destructor</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('meshComponent')">
+                    <td>MeshComponent</td>
+                    <td>Componente que contiene la geometría 3D de un objeto</td>
+                </tr>
+                <tr id="meshComponent" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>vertices</code> - Vector de vértices</li>
+                                <li><code>indices</code> - Vector de índices</li>
+                                <li><code>VAO</code>, <code>VBO</code>, <code>EBO</code> - Identificadores de OpenGL</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>MeshComponent(data)</code> - Constructor</li>
+                                <li><code>~MeshComponent()</code> - Destructor</li>
+                                <li><code>Draw(shader, view, projection)</code> - Dibuja la malla</li>
+                                <li><code>setupMesh()</code> - Configura los buffers en GPU</li>
+                                <li><code>loadModel(path)</code> - Carga un modelo desde archivo OBJ</li>
+                                <li><code>loadHeightMap(heightmap, scaleY, uvScale)</code> - Genera terreno desde mapa de altura</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('perlinNoise')">
+                    <td>PerlinNoise</td>
+                    <td>Generador de ruido Perlin para terrenos</td>
+                </tr>
+                <tr id="perlinNoise" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>perm</code> - Vector de permutaciones para el ruido</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>PerlinNoise(seed)</code> - Constructor con semilla aleatoria</li>
+                                <li><code>noise(x, y, z)</code> - Genera valor de ruido para una coordenada 3D</li>
+                                <li><code>fade(t)</code> - Función de interpolación suavizada</li>
+                                <li><code>lerp(t, a, b)</code> - Interpolación lineal</li>
+                                <li><code>grad(hash, x, y, z)</code> - Función de gradiente</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('renderSystem')">
+                    <td>RenderSystem</td>
+                    <td>Sistema de renderizado diferido con múltiples pasadas</td>
+                </tr>
+                <tr id="renderSystem" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>globalOutputTex</code> - Textura de salida global</li>
+                                <li><code>textureType</code> - Tipo de textura a visualizar</li>
+                                <li><code>screenMode</code> - Modo de visualización</li>
+                                <li><code>skyboxSelector</code> - Selector de skybox activo</li>
+                                <li><code>bSkybox</code> - Activa/desactiva skybox</li>
+                                <li><code>bClouds</code> - Activa/desactiva nubes</li>
+                                <li><code>samples</code> - Muestras para SSAO</li>
+                                <li><code>offset</code> - Desplazamiento para SSAO</li>
+                                <li><code>shadowStrength</code> - Intensidad de las sombras</li>
+                                <li><code>cloudSettings</code> - Configuración de nubes volumétricas</li>
+                                <li><code>gBuffer</code>, <code>gPosition</code>, <code>gNormal</code>, <code>gAlbedo</code> - Buffers para renderizado diferido</li>
+                                <li><code>depthFBO</code>, <code>depthTexture</code> - Buffer y textura de profundidad</li>
+                                <li><code>ssaoFBO</code>, <code>ssaoColorBuffer</code> - Framebuffer y color para SSAO</li>
+                                <li><code>cloudFBO</code>, <code>cloudTexture</code> - Framebuffer y textura para nubes</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>RenderSystem(screenMode, windowWidth, windowHeight)</code> - Constructor</li>
+                                <li><code>~RenderSystem()</code> - Destructor</li>
+                                <li><code>render(em, cm, geometryShader, lightingShader, shadowShader, ssaoShader, ssaoShaderBlur, skyboxShader, cloudShader, skybox, camera)</code> - Renderiza la escena completa</li>
+                                <li><code>createGBuffer(windowWidth, windowHeight)</code> - Crea el G-buffer</li>
+                                <li><code>shadowPass(em, cm, shadowShader)</code> - Pasa de sombras</li>
+                                <li><code>geometryPass(em, cm, shader, camera)</code> - Pasa de geometría</li>
+                                <li><code>lightingPass(em, cm, lightingShader, camera)</code> - Pasa de iluminación</li>
+                                <li><code>ssaoPass(ssaoShader, camera)</code> - Pasa de ambient occlusion</li>
+                                <li><code>cloudPass(cloudShader, camera)</code> - Pasa de nubes volumétricas</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('scriptComponent')">
+                    <td>ScriptComponent</td>
+                    <td>Componente para scripts Lua</td>
+                </tr>
+                <tr id="scriptComponent" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>state_</code> - Estado Lua encapsulado</li>
+                                <li><code>s</code> - Puntero al estado Lua</li>
+                                <li><code>scriptCode</code> - Código fuente del script</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>ScriptComponent(script)</code> - Constructor</li>
+                                <li><code>loadScript(script)</code> - Carga script desde string</li>
+                                <li><code>loadFile(filePath)</code> - Carga script desde archivo</li>
+                                <li><code>run()</code> - Ejecuta el script</li>
+                                <li><code>getGlobal&lt;T&gt;(name)</code> - Obtiene una variable global</li>
+                                <li><code>check(error)</code> - Verifica errores de Lua</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('scriptingSystem')">
+                    <td>ScriptingSystem</td>
+                    <td>Sistema para la gestión de scripts</td>
+                </tr>
+                <tr id="scriptingSystem" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>ScriptingSystem()</code> - Constructor</li>
+                                <li><code>~ScriptingSystem()</code> - Destructor</li>
+                                <li><code>run(componentManager)</code> - Ejecuta todos los scripts</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
                 <tr class="expandable-row" onclick="toggleDetails('shader')">
                     <td>Shader</td>
                     <td>Encapsula programas de sombreado GLSL</td>
@@ -1038,67 +1501,273 @@ while (window.isOpen()) {
                         <div class="details-content">
                             <h3>Variables:</h3>
                             <ul>
-                                <li><code>vertexSource</code> - Código fuente del shader de vértices</li>
-                                <li><code>fragmentSource</code> - Código fuente del shader de fragmentos</li>
-                                <li><code>program</code> - Programa WebGL compilado</li>
+                                <li><code>ID</code> - Identificador del programa shader en OpenGL</li>
                             </ul>
                             <h3>Métodos:</h3>
                             <ul>
-                                <li><code>compile()</code> - Compila los shaders y crea el programa</li>
+                                <li><code>Shader(vertexPath, fragmentPath)</code> - Constructor para shaders básicos</li>
+                                <li><code>Shader(vertexPath, fragmentPath, geometryPath)</code> - Constructor con shader de geometría</li>
                                 <li><code>use()</code> - Activa este programa shader</li>
-                                <li><code>setUniform(name, value)</code> - Establece un valor uniforme</li>
-                                <li><code>getAttributeLocation(name)</code> - Obtiene la ubicación de un atributo</li>
+                                <li><code>setFloat(name, value)</code> - Establece un valor flotante uniforme</li>
+                                <li><code>setInt(name, value)</code> - Establece un valor entero uniforme</li>
+                                <li><code>setVec2(name, value)</code> - Establece un vector 2D uniforme</li>
+                                <li><code>setVec3(name, value)</code> - Establece un vector 3D uniforme</li>
+                                <li><code>setVec4(name, value)</code> - Establece un vector 4D uniforme</li>
+                                <li><code>setMat4(name, mat)</code> - Establece una matriz 4x4 uniforme</li>
+                                <li><code>checkCompileErrors(shader, type)</code> - Verifica errores de compilación</li>
+                                <li><code>~Shader()</code> - Destructor</li>
                             </ul>
                         </div>
                     </td>
                 </tr>
-                
-                <tr class="expandable-row" onclick="toggleDetails('mesh')">
-                    <td>Mesh</td>
-                    <td>Representa geometría 3D con vértices e índices</td>
+
+                <tr class="expandable-row" onclick="toggleDetails('skybox')">
+                    <td>Skybox</td>
+                    <td>Representa un cielo cubemap</td>
                 </tr>
-                <tr id="mesh" class="details-row">
+                <tr id="skybox" class="details-row">
                     <td colspan="2">
                         <div class="details-content">
                             <h3>Variables:</h3>
                             <ul>
-                                <li><code>vertices</code> - Array de vértices</li>
-                                <li><code>normals</code> - Array de normales</li>
-                                <li><code>uvs</code> - Array de coordenadas de textura</li>
-                                <li><code>indices</code> - Array de índices</li>
-                                <li><code>material</code> - Material asignado</li>
+                                <li><code>skyboxVAO</code>, <code>skyboxVBO</code> - Buffers para el cubo</li>
+                                <li><code>cubemapTexture</code> - Textura del cubemap</li>
                             </ul>
                             <h3>Métodos:</h3>
                             <ul>
-                                <li><code>setGeometry(vertices, indices)</code> - Establece datos geométricos</li>
-                                <li><code>computeNormals()</code> - Calcula normales de vértices</li>
-                                <li><code>setMaterial(material)</code> - Asigna un material</li>
-                                <li><code>transform(matrix)</code> - Aplica una transformación</li>
+                                <li><code>Skybox()</code> - Constructor</li>
+                                <li><code>~Skybox()</code> - Destructor</li>
                             </ul>
                         </div>
                     </td>
                 </tr>
-                
-                <tr class="expandable-row" onclick="toggleDetails('texture')">
-                    <td>Texture</td>
-                    <td>Gestiona recursos de texturas 2D/3D/Cubemap</td>
+
+                <tr class="expandable-row" onclick="toggleDetails('skyboxManager')">
+                    <td>SkyboxManager</td>
+                    <td>Gestiona skyboxes para el fondo de escena</td>
                 </tr>
-                <tr id="texture" class="details-row">
+                <tr id="skyboxManager" class="details-row">
                     <td colspan="2">
                         <div class="details-content">
                             <h3>Variables:</h3>
                             <ul>
-                                <li><code>width</code> - Ancho de la textura</li>
-                                <li><code>height</code> - Alto de la textura</li>
-                                <li><code>format</code> - Formato (RGB, RGBA, etc.)</li>
-                                <li><code>type</code> - Tipo (2D, 3D, Cubemap)</li>
+                                <li><code>skyboxes</code> - Vector de skyboxes cargados</li>
                             </ul>
                             <h3>Métodos:</h3>
                             <ul>
-                                <li><code>load(url)</code> - Carga una textura desde una URL</li>
-                                <li><code>bind(unit)</code> - Vincula la textura a una unidad</li>
-                                <li><code>setFiltering(min, mag)</code> - Establece filtros</li>
-                                <li><code>generateMipmaps()</code> - Genera mipmaps</li>
+                                <li><code>SkyboxManager()</code> - Constructor</li>
+                                <li><code>add(faces)</code> - Añade un skybox desde 6 imágenes</li>
+                                <li><code>loadCubemap(faces, skybox)</code> - Carga las 6 caras de un cubemap</li>
+                                <li><code>render(skyboxShader, camera, skyboxSelected)</code> - Renderiza el skybox seleccionado</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('soundSystem')">
+                    <td>SoundSystem</td>
+                    <td>Sistema de audio con OpenAL</td>
+                </tr>
+                <tr id="soundSystem" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>tracksForBranching</code> - Pistas para ramificación</li>
+                                <li><code>tracksForInterpolateBranching</code> - Pistas para interpolación</li>
+                                <li><code>branching</code> - Estructura de ramificación</li>
+                                <li><code>device</code> - Dispositivo de audio OpenAL</li>
+                                <li><code>context</code> - Contexto de audio OpenAL</li>
+                                <li><code>buffers</code> - Buffers de audio</li>
+                                <li><code>sources</code> - Fuentes de audio</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>SoundSystem()</code> - Constructor</li>
+                                <li><code>~SoundSystem()</code> - Destructor</li>
+                                <li><code>loadOggFile(filePath, buffer)</code> - Carga archivo Ogg Vorbis</li>
+                                <li><code>loadWavFile(filePath, buffer)</code> - Carga archivo WAV</li>
+                                <li><code>play(source)</code> - Reproduce una fuente de audio</li>
+                                <li><code>pause(source)</code> - Pausa una fuente de audio</li>
+                                <li><code>stop(source)</code> - Detiene una fuente de audio</li>
+                                <li><code>setVolume(source, volume)</code> - Establece volumen</li>
+                                <li><code>setLooping(source, loop)</code> - Establece repetición</li>
+                                <li><code>crossfade(sourceFrom, sourceTo, crossfadeStart)</code> - Transición entre pistas</li>
+                                <li><code>cleanup()</code> - Libera recursos de audio</li>
+                                <li><code>addBufferToSourceQueue(source, buffer)</code> - Añade buffer a la cola</li>
+                                <li><code>removeBufferToSourceQueue(source, buffer)</code> - Elimina buffer de la cola</li>
+                                <li><code>removeAllBuffersQueue(source)</code> - Limpia la cola de buffers</li>
+                                <li><code>getBuffersProccesed(source)</code> - Obtiene buffers procesados</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('textureComponent')">
+                    <td>TextureComponent</td>
+                    <td>Gestiona texturas para materiales</td>
+                </tr>
+                <tr id="textureComponent" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>ID</code> - Identificador OpenGL de la textura</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>TextureComponent(image)</code> - Constructor con imagen</li>
+                                <li><code>TextureComponent(image)</code> - Constructor con puntero compartido a imagen</li>
+                                <li><code>loadTexture(path)</code> - Carga una textura desde archivo</li>
+                                <li><code>bind(id, sampler, shader)</code> - Activa la textura para renderizado</li>
+                                <li><code>convertToRGB(data, width, height, channels)</code> - Convierte datos de imagen a RGB</li>
+                                <li><code>~TextureComponent()</code> - Destructor</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('textureImage')">
+                    <td>TextureImage</td>
+                    <td>Almacena datos de una imagen de textura</td>
+                </tr>
+                <tr id="textureImage" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>data</code> - Datos de la imagen</li>
+                                <li><code>width</code>, <code>height</code> - Dimensiones de la imagen</li>
+                                <li><code>nrChannels</code> - Número de canales de color</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>TextureImage(data, width, height, nrChannels)</code> - Constructor</li>
+                                <li><code>~TextureImage()</code> - Destructor</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('transformComponent')">
+                    <td>TransformComponent</td>
+                    <td>Componente que define posición, rotación y escala</td>
+                </tr>
+                <tr id="transformComponent" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>position</code> - Vector de posición (x, y, z)</li>
+                                <li><code>rotation</code> - Vector de rotación en grados (x, y, z)</li>
+                                <li><code>scale</code> - Vector de escala (x, y, z)</li>
+                                <li><code>verticalDirection</code> - Dirección vertical</li>
+                                <li><code>horizontallDirection</code> - Dirección horizontal</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>TransformComponent(pos, rot, scl)</code> - Constructor</li>
+                                <li><code>getTransformationMatrix()</code> - Obtiene la matriz de transformación</li>
+                                <li><code>setPosition(newPos)</code> - Establece la posición</li>
+                                <li><code>setRotation(newRot)</code> - Establece la rotación</li>
+                                <li><code>setScale(newScale)</code> - Establece la escala</li>
+                                <li><code>~TransformComponent()</code> - Destructor</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('transformSystem')">
+                    <td>TransformSystem</td>
+                    <td>Sistema para la actualización de transformaciones</td>
+                </tr>
+                <tr id="transformSystem" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>TransformSystem()</code> - Constructor</li>
+                                <li><code>~TransformSystem()</code> - Destructor</li>
+                                <li><code>update(em, componentManager, deltaTime)</code> - Actualiza todas las transformaciones</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('uiRenderer')">
+                    <td>UIRenderer</td>
+                    <td>Sistema de interfaz de usuario con ImGui</td>
+                </tr>
+                <tr id="uiRenderer" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>UIRenderer(window)</code> - Constructor</li>
+                                <li><code>newFrame()</code> - Inicia un nuevo frame de UI</li>
+                                <li><code>endFrame()</code> - Finaliza y renderiza un frame de UI</li>
+                                <li><code>entityViewer(em)</code> - Muestra entidades del sistema</li>
+                                <li><code>changeRenderTexture(textureType, skybox, skyboxSelector, clouds)</code> - Cambia la textura de renderizado</li>
+                                <li><code>ecsDemoInfo()</code> - Muestra información del sistema ECS</li>
+                                <li><code>changeMeshDemoInfo()</code> - Muestra información de cambio de malla</li>
+                                <li><code>TransformEditor(transform)</code> - Editor de componentes Transform</li>
+                                <li><code>LightEditor(light)</code> - Editor de componentes Light</li>
+                                <li><code>CameraEditor(camera)</code> - Editor de cámara</li>
+                                <li><code>ColorEditor(color)</code> - Editor de componentes Color</li>
+                                <li><code>ShadowEditor(renderSystem)</code> - Editor de sombras</li>
+                                <li><code>CloudEditor(renderSystem)</code> - Editor de nubes</li>
+                                <li><code>settingsWindow(camera, light, Deferred, textureType, skybox, skyboxSelector, clouds)</code> - Ventana de configuración</li>
+                                <li><code>renderTextureWindow(textureID)</code> - Muestra una textura en ventana</li>
+                                <li><code>renderWindow(system)</code> - Muestra ventana de renderizado</li>
+                                <li><code>~UIRenderer()</code> - Destructor</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('velocityComponent')">
+                    <td>VelocityComponent</td>
+                    <td>Componente para almacenar información de velocidad</td>
+                </tr>
+                <tr id="velocityComponent" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>value</code> - Valor de velocidad</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>VelocityComponent()</code> - Constructor por defecto (0.0)</li>
+                                <li><code>VelocityComponent(v)</code> - Constructor con valor inicial</li>
+                                <li><code>~VelocityComponent()</code> - Destructor</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('window')">
+                    <td>Window</td>
+                    <td>Gestiona la ventana de aplicación</td>
+                </tr>
+                <tr id="window" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>window</code> - Puntero a la ventana GLFW</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>make(width, height, name, system)</code> - Crea una nueva ventana</li>
+                                <li><code>Window(glfwWindow)</code> - Constructor</li>
+                                <li><code>makeContext(system)</code> - Configura el contexto OpenGL</li>
+                                <li><code>isOpen()</code> - Verifica si la ventana está abierta</li>
+                                <li><code>clear(r, g, b, a)</code> - Limpia el buffer con un color</li>
+                                <li><code>swapBuffers()</code> - Intercambia los buffers (doble buffer)</li>
+                                <li><code>pollEvents()</code> - Procesa eventos pendientes</li>
+                                <li><code>getWindow()</code> - Obtiene el puntero a la ventana GLFW</li>
+                                <li><code>~Window()</code> - Destructor</li>
                             </ul>
                         </div>
                     </td>
