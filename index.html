@@ -399,6 +399,101 @@
             margin-left: 0;
             flex-grow: 1;
         }
+
+/* Estilos para la sección API expandible con mayor contraste */
+.api-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.api-table th, .api-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #c0cfff;
+}
+
+.api-table th {
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 1.1em;
+}
+
+/* Filas expandibles */
+.api-expandable-row {
+    cursor: pointer;
+    transition: all 0.3s;
+    background-color: white;
+    position: relative;
+}
+
+.api-expandable-row:hover {
+    background-color: #d8e1ff;
+}
+
+/* Añadir icono de despliegue */
+.api-expandable-row td:first-child::after {
+    content: '+';
+    position: absolute;
+    right: 20px;
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+/* Cambiar icono cuando está expandido */
+.api-expandable-row.active td:first-child::after {
+    content: '−';
+}
+
+/* Filas de detalles */
+.details-row {
+    display: none;
+    background-color: #ebf0ff;
+    border-left: 5px solid var(--primary-color);
+}
+
+/* Anular cualquier hover de tabla genérico que pueda estar afectando */
+.api-table tr.details-row:hover {
+    background-color: #ebf0ff !important; /* Mantener el mismo color de fondo - !important para sobreescribir otros estilos */
+}
+
+.details-content {
+    padding: 20px;
+}
+
+.details-content h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    color: var(--secondary-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 8px;
+    display: inline-block;
+}
+
+.details-content ul {
+    margin: 0 0 20px 0;
+    padding-left: 20px;
+}
+
+.details-content li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.details-content code {
+    background-color: #e8eaed;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    color: var(--accent-color);
+    font-weight: 500;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
         
         @media (max-width: 768px) {
             nav ul {
@@ -844,61 +939,135 @@ while (window.isOpen()) {
             
         <section id="api">
             <h2>Referencia de API</h2>
-            <p>Nuestro motor proporciona una API clara y bien documentada para todos sus subsistemas. A continuación se muestran algunas de las clases y funciones más importantes:</p>
-            
-            <h3>Sistema de Renderizado</h3>
+        
             <table class="api-table">
                 <tr>
                     <th>Clase/Función</th>
                     <th>Descripción</th>
                 </tr>
-                <tr>
+                <tr class="expandable-row" onclick="toggleDetails('renderer')">
                     <td>Renderer</td>
                     <td>Clase principal para gestionar el renderizado de la escena</td>
                 </tr>
-                <tr>
+                <tr id="renderer" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>canvas</code> - Elemento HTML Canvas para renderizar</li>
+                                <li><code>context</code> - Contexto WebGL</li>
+                                <li><code>width</code> - Ancho del viewport</li>
+                                <li><code>height</code> - Alto del viewport</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>initialize(canvas)</code> - Inicializa el renderizador con un canvas</li>
+                                <li><code>setSize(width, height)</code> - Establece el tamaño del viewport</li>
+                                <li><code>render(scene, camera)</code> - Renderiza una escena con una cámara</li>
+                                <li><code>clear()</code> - Limpia el buffer de renderizado</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                
+                <tr class="expandable-row" onclick="toggleDetails('material')">
                     <td>Material</td>
                     <td>Define propiedades de superficie para objetos 3D</td>
                 </tr>
-                <tr>
+                <tr id="material" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>type</code> - Tipo de material (básico, phong, etc.)</li>
+                                <li><code>color</code> - Color base del material</li>
+                                <li><code>opacity</code> - Nivel de opacidad (0-1)</li>
+                                <li><code>transparent</code> - Si el material es transparente</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>setColor(r, g, b)</code> - Establece el color RGB</li>
+                                <li><code>setOpacity(value)</code> - Establece la opacidad</li>
+                                <li><code>setTexture(texture)</code> - Asigna una textura</li>
+                                <li><code>clone()</code> - Crea una copia del material</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                
+                <tr class="expandable-row" onclick="toggleDetails('shader')">
                     <td>Shader</td>
                     <td>Encapsula programas de sombreado GLSL</td>
                 </tr>
-                <tr>
+                <tr id="shader" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>vertexSource</code> - Código fuente del shader de vértices</li>
+                                <li><code>fragmentSource</code> - Código fuente del shader de fragmentos</li>
+                                <li><code>program</code> - Programa WebGL compilado</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>compile()</code> - Compila los shaders y crea el programa</li>
+                                <li><code>use()</code> - Activa este programa shader</li>
+                                <li><code>setUniform(name, value)</code> - Establece un valor uniforme</li>
+                                <li><code>getAttributeLocation(name)</code> - Obtiene la ubicación de un atributo</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                
+                <tr class="expandable-row" onclick="toggleDetails('mesh')">
                     <td>Mesh</td>
                     <td>Representa geometría 3D con vértices e índices</td>
                 </tr>
-                <tr>
+                <tr id="mesh" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>vertices</code> - Array de vértices</li>
+                                <li><code>normals</code> - Array de normales</li>
+                                <li><code>uvs</code> - Array de coordenadas de textura</li>
+                                <li><code>indices</code> - Array de índices</li>
+                                <li><code>material</code> - Material asignado</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>setGeometry(vertices, indices)</code> - Establece datos geométricos</li>
+                                <li><code>computeNormals()</code> - Calcula normales de vértices</li>
+                                <li><code>setMaterial(material)</code> - Asigna un material</li>
+                                <li><code>transform(matrix)</code> - Aplica una transformación</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                
+                <tr class="expandable-row" onclick="toggleDetails('texture')">
                     <td>Texture</td>
                     <td>Gestiona recursos de texturas 2D/3D/Cubemap</td>
                 </tr>
-            </table>
-            
-            <h3>Sistema de Física</h3>
-            <table class="api-table">
-                <tr>
-                    <th>Clase/Función</th>
-                    <th>Descripción</th>
-                </tr>
-                <tr>
-                    <td>PhysicsWorld</td>
-                    <td>Simula y gestiona todos los cuerpos físicos</td>
-                </tr>
-                <tr>
-                    <td>RigidBody</td>
-                    <td>Representa un objeto físico con masa e inercia</td>
-                </tr>
-                <tr>
-                    <td>Collider</td>
-                    <td>Define formas para detección de colisiones</td>
-                </tr>
-                <tr>
-                    <td>Joint</td>
-                    <td>Crea restricciones entre cuerpos físicos</td>
-                </tr>
-                <tr>
-                    <td>PhysicsMaterial</td>
-                    <td>Define propiedades como fricción y rebote</td>
+                <tr id="texture" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>width</code> - Ancho de la textura</li>
+                                <li><code>height</code> - Alto de la textura</li>
+                                <li><code>format</code> - Formato (RGB, RGBA, etc.)</li>
+                                <li><code>type</code> - Tipo (2D, 3D, Cubemap)</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>load(url)</code> - Carga una textura desde una URL</li>
+                                <li><code>bind(unit)</code> - Vincula la textura a una unidad</li>
+                                <li><code>setFiltering(min, mag)</code> - Establece filtros</li>
+                                <li><code>generateMipmaps()</code> - Genera mipmaps</li>
+                            </ul>
+                        </div>
+                    </td>
                 </tr>
             </table>
         </section>
@@ -1000,6 +1169,34 @@ while (window.isOpen()) {
                 }
             });
         });
+
+
+/* Script JavaScript */
+function toggleDetails(id) {
+    const element = document.getElementById(id);
+    // Encontrar la fila expandible que activó esta acción
+    const expandableRow = document.querySelector(`[onclick="toggleDetails('${id}')"]`);
+    
+    if (element.style.display === "table-row") {
+        // Ocultar detalles
+        element.style.display = "none";
+        // Quitar clase active de la fila expandible
+        expandableRow.classList.remove("active");
+    } else {
+        // Mostrar detalles
+        element.style.display = "table-row";
+        // Añadir clase active a la fila expandible
+        expandableRow.classList.add("active");
+    }
+}
+
+// Inicializar todas las filas de detalles como ocultas
+document.addEventListener('DOMContentLoaded', function() {
+    const apiDetailsRows = document.querySelectorAll('.details-row');
+    apiDetailsRows.forEach(function(row) {
+        row.style.display = 'none';
+    });
+});
     </script>
 </body>
 </html>
