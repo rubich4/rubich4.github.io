@@ -607,11 +607,9 @@
                     <p>Renderizado basado en OpenGL con soporte de las siguientes técnicas:</p>
                     <ul>
                         <li>Sistema de iluminación</li>
-                        <li>Técnicas de sombreado: Blinn-Phong</li>
-                        <li>Pipeline de renderizado diferido</li>
-                        <li>Nubes volumétricas y efectos atmosféricos</li>
+                        <li>Técnicas de sombreado</li>
+                        <li>Nubes volumétricas</li>
                         <li>Ambient Occlusion</li>
-                        <li>Post-procesado avanzado</li>
                         <li>Soporte para skyboxes</li>
                     </ul>
                 </div>
@@ -656,15 +654,15 @@
                         <div class="gallery-caption">Arquitectura ECS: Organización de entidades y componentes</div>
                     </div>
                     <div class="gallery-item" style="cursor: pointer;">
-                        <img src="clouds_image.jpg" alt="Técnicas de sombreado" class="gallery-image">
+                        <img src="clouds.png" alt="Técnicas de sombreado" class="gallery-image">
                         <div class="gallery-caption">Efectos atmosféricos y nubes volumétricas</div>
                     </div>
                     <div class="gallery-item" style="cursor: pointer;">
-                        <img src="skybox_image.jpg" alt="Skyboxes" class="gallery-image">
+                        <img src="skybox.png" alt="Skyboxes" class="gallery-image">
                         <div class="gallery-caption">Sistema de skyboxes dinámicos</div>
                     </div>
                     <div class="gallery-item" style="cursor: pointer;">
-                        <img src="postprocess_image.jpg" alt="Post-procesado" class="gallery-image">
+                        <img src="ssao.png" alt="Post-procesado" class="gallery-image">
                         <div class="gallery-caption">Efectos de post-procesado y ambient occlusion</div>
                     </div>
                 </div>
@@ -673,14 +671,19 @@
         
         <section id="arquitectura">
             <h2>Arquitectura del Motor</h2>
-
             <button class="collapsible">
                 <svg class="architecture-icon">
                     <use href="#window-icon"></use>
                 </svg>
                 <span class="icon-title">VENTANA GRÁFICA</span>
             </button>
+            
             <div class="collapsible-content">
+                <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">Creación y gestión eficiente de ventanas gráficas. La inicialización comienza con la creación 
+                de una instancia del sistema de motor <strong>[EngineSystem]</strong> y la configuración de los parámetros básicos de la ventana, utilizando la función estática <strong>[Window::make()]</strong> de la clase <strong>[Window]</strong>.</p>
+
+                <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">La funicón <strong>[Window::make()]</strong> devolverá un <strong>optional ptr</strong>, para obtener la variable de ventana necesitaremos mover su valor a una varibale de tipo <strong>[Window]</strong>.
+                    Por último habrá que asociar la ventana creando un contexto en el sistema, para lograrlo es necesario utilizar <strong>[window.makeContext(system)]</strong>.</p>
                 <div class="code-block">
                     <pre>
 //ENGINE//---------------------------------------------------------------------------------------
@@ -710,6 +713,8 @@ window.makeContext(system);</pre>
                 <span class="icon-title">CONTROLES & INTERFAZ USUARIO</span>
             </button>
             <div class="collapsible-content">
+                <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">Para poder utilizar las funcionalidades de input, es necesario declarar un clase <strong>[Input]</strong> y asignarle la ventana
+                que tiene en contexto el sistema del motor. De la misma forma con la clase <strong>[UIRenderer]</strong>. Estas variables inicialidas serán necesarias más adelante por otros subsistemas.</p>
                 <div class="code-block">
                     <pre>
 //INPUT//-----------------------------------------------------------------------------------------
@@ -727,6 +732,11 @@ UIRenderer ui(window.getWindow());</pre>
                 <span class="icon-title">CÁMARA PRINCIPAL</span>
             </button>
             <div class="collapsible-content">
+                <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">Creación y gestión de una variable Cámara. Para crear una variable <strong>[Camera]</strong>, es necesario, haber creado una clase <strong>[Input]</strong> previamente
+                    y asignarla a la cámara junto a los demás parámetros de inicialización. Para utilizar dicha cámara como vista en la escena, será necesario asociarla al <strong>[RenderSystem]</strong>.</p>
+
+                <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">Por otro lado, el movimiento de Flycam puede ser activado, utilizando el método <strong>[camera.update()]</strong> en el Main Loop. 
+                    Para poder desbloquear la rotación de la cámara es necesario pulsar la tecla <strong>[SHIFT]</strong> y para el movimiento normal <strong>[WASD]</strong>. La intensidad del <strong>[SSAO]</strong> también se encuentra en la cámara.</p>
                 <div class="code-block">
                     <pre>
 //CÁMARA//----------------------------------------------------------------------------------------
@@ -737,8 +747,14 @@ Camera camera(&input, glm::vec3(-90.0f, 150.0f, 130.0f),                // posic
                 windowWidth / windowHeight,                             // relación de aspecto
                 0.1f,                                                   // plano cercano
                 15000.f);                                               // plano lejano
+
+//ASOCIAR CÁMARA AL RENDER//----------------------------------------------------------------------
+renderSystem.render(em, cm, "renderShader...", "skybox", camera);
+
+//SSAO//------------------------------------------------------------------------------------------
+camera.ambientOclussionStrenght = 1.0f;
             
-//MOVIMIENTO CÁMARA FLYCAM//-----------------------------------------------------------------------
+//MOVIMIENTO CÁMARA FLYCAM//----------------------------------------------------------------------
 float deltaTime = system.getDeltaTime();
 camera.update(deltaTime);</pre>
                 </div>
@@ -751,6 +767,10 @@ camera.update(deltaTime);</pre>
                 <span class="icon-title">SISTEMA ECS</span>
             </button>
             <div class="collapsible-content">
+                <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">Creación y gestión de entidades. Para poder utilizar las herramientas ECS, es necesario crear una variable de tipo <strong>[EntityManager]</strong>
+                y otra de tipo <strong>[ComponentManager]</strong>, la primera permitirá crear entidades y la segunda añadir/obtener componentes de dichas entidades.</p> 
+                
+                <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">Es importante tener en cuenta que los componentes se deben obtener preferiblemente en el Main Loop.</p>
                 <div class="code-block">
                     <pre>
 //INICIALIZAR ECS//--------------------------------------------------------------------------------
@@ -767,9 +787,9 @@ cm.addComponent(Luffy, MeshComponent(MeshComponent::loadModel("../assets/obj/luf
 cm.addComponent(Luffy, TextureComponent(TextureComponent::loadTexture("../assets/textures/luffyTexture.png")));
 
 //OBTENER COMPONENTES DE ENTIDAD//-----------------------------------------------------------------
-TransformComponent* tc = cm.getComponent<TransformComponent>(Luffy);
-MeshComponent* mc = cm.getComponent<MeshComponent>(Luffy);
-TextureComponent* texc = cm.getComponent<TextureComponent>(Luffy);</pre>
+TransformComponent* tc = cm.getComponent&ltTransformComponent&gt(Luffy);
+MeshComponent* mc = cm.getComponent&ltMeshComponent&gt(Luffy);
+TextureComponent* texc = cm.getComponent&ltTextureComponent&gt(Luffy);</pre>
                 </div>
             </div>
 
@@ -780,6 +800,10 @@ TextureComponent* texc = cm.getComponent<TextureComponent>(Luffy);</pre>
                 <span class="icon-title">SKYBOXES</span>
             </button>
             <div class="collapsible-content">
+                <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">Creación y gestión de skybox. Para poder añadir un skybox a la escena es necesario crear una variable de tipo <strong>[SkyboxManager]</strong>,
+                este manager nos permitirá agregar varios skybox con el método <strong>[skyboxManager.add()]</strong>  para posteriormente seleccionar el que queramos renderizar.</p> 
+
+                <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">El formato aceptado por <strong>[skyboxManager.add()]</strong> es un CubeMap que se compone de 6 imagenes. <strong>Referencia:</strong> <a href="https://freestylized.com/all-skybox/" target="_blank">Freestylized Skybox Collection</a></p> 
                 <div class="code-block">
                     <pre>
 //SKYBOXES//----------------------------------------------------------------------------------------
@@ -820,6 +844,19 @@ renderSystem.render(em, cm, "renderShader...", skyboxManager, camera);</pre>
                 <span class="icon-title">GENERACIÓN DE TERRENOS</span>
             </button>
             <div class="collapsible-content">
+                <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">La generación de Terrenos se divide en 3 secciones. La primera sección consiste en generar el mapa de alturas con la clase <strong>[HeightmapGenerator]</strong> y el método
+                 <strong>[heightmap.generateHeightmap()]</strong>, esto generará una imagen de heightmap guardada en nuestro dispositivo, también podemos hacerlo respectivamente con el colormap del terreno 
+                 utilizando <strong>[heightmap.generateColorMap()]</strong>, esto generará una textura que al asignarla al terreno dará un color por alturas.</p> 
+
+                 <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">La segunda sección consiste en transformar la imagen heightmap generada previamente en una maya de terreno, para lograr esta función es necesario
+                    leer el archivo imagen heightmap del dispositivo y almacenarlo en una variable de tipo <strong>[TextureImage]</strong>, una vez hecho esto, al añadir un componente <strong>[Mesh]</strong> en lugar de cargar un modelo, hay que utilizar el
+                    método estático <strong>[MeshComponent::loadHeightMap()]</strong>.
+                 </p> 
+
+                 <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">La tercera y última sección consiste en generar assets distribuidos por altura y cantidad en un terreno (compatible con otros modelos 3D). Para lograr este resultado
+                    se debe crear una variable <strong>[Generation]</strong> para cada iteración de generación, también se debe asociar en su inicialización una entidad que contenga un componente <strong>[Mesh]</strong>, si la entidad no contiene dicho componente la generación fallará.
+                 </p> 
+
                 <div class="code-block">
                     <pre>
 //GENERADOR MAPA DE ALTURA//-----------------------------------------------------------------------
@@ -845,10 +882,6 @@ cm.addComponent(h_map, TextureComponent(TextureComponent::loadTexture("../assets
 MeshData palm = MeshComponent::loadModel("../assets/obj/palm.obj");
 std::shared_ptr<TextureImage> palmTexture = std::make_shared<TextureImage>(TextureComponent::loadTexture("../assets/textures/palmTexture.png"));
 Generation gen(em, cm, h_map, palm, glm::vec3(3.0f, 4.0f, 3.0f), palmTexture, glm::vec2(4.0f, 11.0f),
-
-MeshData palm = MeshComponent::loadModel("../assets/obj/palm.obj");
-std::shared_ptr<TextureImage> palmTexture = std::make_shared<TextureImage>(TextureComponent::loadTexture("../assets/textures/palmTexture.png"));
-Generation gen(em, cm, h_map, palm, glm::vec3(3.0f, 4.0f, 3.0f), palmTexture, glm::vec2(4.0f, 11.0f), 20);
 
 MeshData grass = MeshComponent::loadModel("../assets/obj/grass.obj");
 std::shared_ptr<TextureImage> grassTexture = std::make_shared<TextureImage>(TextureComponent::loadTexture("../assets/textures/grassTexture.png"));
@@ -877,6 +910,7 @@ std::shared_ptr<Shader> ssaoBlurShader = std::make_shared<Shader>("../shaders/ve
 std::shared_ptr<Shader> skyboxShader = std::make_shared<Shader>("../shaders/vertex/skybox.vs", "../shaders/fragment/skybox.fs");
 std::shared_ptr<Shader> cloudShader = std::make_shared<Shader>("../shaders/vertex/cloudShader.vs", "../shaders/fragment/cloudShader.fs");
 
+//MAIN LOOP//--------------------------------------------------------------------------------------  
 renderSystem.render(em, cm, geometryShader, lightShader, shadowShader, ssaoShader, ssaoBlurShader, skyboxShader, cloudShader, skyboxManager, camera);</pre>
                 </div>
             </div>
