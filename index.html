@@ -908,6 +908,10 @@ Generation gen2(em, cm, h_map, grass, glm::vec3(3.0f, 7.5f, 3.0f), grassTexture,
                     Si se desea que una entidad no genere sombra, <strong>ColorComponent{ glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), <strong>castShadow = false</strong>};</strong>
                 </p>
 
+                <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">En el constructor se puede indicar si el resultado final del renderizado se volcará en la pantalla(true) o en una textura(false). En caso que sea en una textura, que es
+                    la forma default, en el Main Loop se deberá utilizar la función de la clase de interfaz de usuario, <strong>[ui.renderWindow(renderSystem)]</strong> esto renderizará la escena en una ventana imgui del tamaño correspondiente.
+                </p>
+
                 <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">El motor da soporte a los <strong>[OPE Default Shaders]</strong>, estos shaders son esenciales al momento de realizar el renderizado,
                     es posible utilizar shaders customizados pero se recomienda el uso de los nativos del motor. Estos se incluyen en la siguiente ruta: <strong>"../shaders/vertex/vsShader"</strong> y <strong>"../shaders/fragment/fsShader"</strong>.</p>
                     
