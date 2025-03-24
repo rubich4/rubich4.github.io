@@ -1302,6 +1302,7 @@ while (window.isOpen()) {
                                 <li><code>spotShadowFBO</code> - Framebuffer para sombras de foco</li>
                                 <li><code>spotShadowMap</code> - Mapa de sombras para luces de foco</li>
                                 <li><code>SHADOW_WIDTH</code>, <code>SHADOW_HEIGHT</code> - Resolución de mapas de sombras</li>
+                                <li><code>quadVAO</code>, <code>quadVBO</code> - Buffers para el quad de renderizado</li>
                                 <li><code>windowWidth</code>, <code>windowHeight</code> - Dimensiones de la ventana</li>
                                 <li><code>bSkybox</code> - Activa/desactiva el skybox</li>
                                 <li><code>skyboxSelector</code> - Selector de skybox</li>
@@ -1311,12 +1312,14 @@ while (window.isOpen()) {
                             <h3>Métodos:</h3>
                             <ul>
                                 <li><code>ForwardRenderSystem(windowWidth, windowHeight)</code> - Constructor</li>
+                                <li><code>~ForwardRenderSystem()</code> - Destructor que libera los recursos de OpenGL</li>
                                 <li><code>forwardRender(em, componentManager, lightShader, shadowShader, camera, lightSpaceMatrix, skyboxShader, skyboxManager)</code> - Renderiza la escena</li>
+                                <li><code>renderEntities(em, componentManager, shader, colorVector)</code> - Método privado que renderiza las entidades con los componentes necesarios</li>
                                 <li><code>GetLightSpaceMatrix(lightPos, lightType, lightDirection)</code> - Obtiene la matriz de luz</li>
-                                <li><code>RenderDepthMap(em, componentManager, shadowShader, lightSpaceMatrix)</code> - Renderiza el mapa de profundidad</li>
-                                <li><code>shadowPass(em, componentManager, shadowShader)</code> - Pasa de sombras</li>
                                 <li><code>createShadowMapCube(resolution)</code> - Crea un mapa de sombras cúbico</li>
                                 <li><code>CreateSpotLightShadowMap()</code> - Crea mapa de sombras para spotlight</li>
+                                <li><code>SetupDirectionalShadowMap()</code> - Configura el mapa de sombras para luces direccionales</li>
+                            </ul>
                             </ul>
                         </div>
                     </td>
@@ -1824,6 +1827,7 @@ while (window.isOpen()) {
                                 <li><code>ColorEditor(color)</code> - Editor de componentes Color</li>
                                 <li><code>ShadowEditor(renderSystem)</code> - Editor de sombras</li>
                                 <li><code>CloudEditor(renderSystem)</code> - Editor de nubes</li>
+                                <li><code>lightSelector(EntityManager& em, ComponentManager& cm)</code> - Selecciona la luz que deseas y te permite editarla</li>
                                 <li><code>settingsWindow(camera, light, Deferred, textureType, skybox, skyboxSelector, clouds)</code> - Ventana de configuración</li>
                                 <li><code>renderTextureWindow(textureID)</code> - Muestra una textura en ventana</li>
                                 <li><code>renderWindow(system)</code> - Muestra ventana de renderizado</li>
