@@ -6,6 +6,53 @@
     <link rel="icon" type="image/png" href="logo.png">
     <title>OPEngine</title>
     <style>
+
+    .download-section {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #f0f4ff, #e6ecff);
+        border-radius: 10px;
+        border-left: 4px solid var(--primary-color);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .download-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem 2rem;
+        margin: 1rem 0;
+        font-size: 1.1rem;
+        background: linear-gradient(135deg, var(--primary-color), #2c4abb);
+        color: white;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(74, 109, 229, 0.3);
+        text-decoration: none;
+    }
+    
+    .download-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(74, 109, 229, 0.4);
+        background: linear-gradient(135deg, #5a7af0, #3a5bd0);
+    }
+    
+    .download-icon {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='7 10 12 15 17 10'/%3E%3Cline x1='12' y1='15' x2='12' y2='3'/%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+    
+    .download-info {
+        font-size: 0.9rem;
+        color: #666;
+        margin-top: 0.5rem;
+    }
+
         :root {
             --primary-color: #4a6de5;
             --secondary-color: #2c3e50;
@@ -944,7 +991,7 @@ HeightmapGenerator heightmap(512, 512);
 heightmap.generateHeightmap(0.01, 4, 0.4, 2.2);
 heightmap.applyIslandMask(1.5);
 heightmap.saveAsImage("../assets/heightmaps/heightmap.png");
-std::vector<uint8_t> colorMap = heightmap.generateColorMap();
+std::vector&ltuint8_t&gt colorMap = heightmap.generateColorMap();
 heightmap.saveColorMapAsImage("../assets/heightmaps/heightmap_colormap.png", colorMap, heightmap.width, heightmap.height);
 
 //ENTIDAD DE TERRENO//------------------------------------------------------------------------------
@@ -960,11 +1007,11 @@ cm.addComponent(h_map, TextureComponent(TextureComponent::loadTexture("../assets
 
 //GENERACIÓN DE ASSETS EN UN TERRENO//----------------------------------------------------------------
 MeshData palm = MeshComponent::loadModel("../assets/obj/palm.obj");
-std::shared_ptr<TextureImage> palmTexture = std::make_shared<TextureImage>(TextureComponent::loadTexture("../assets/textures/palmTexture.png"));
+std::shared_ptr&ltTextureImageglt palmTexture = std::make_shared&ltTextureImage&gt(TextureComponent::loadTexture("../assets/textures/palmTexture.png"));
 Generation gen(em, cm, h_map, palm, glm::vec3(3.0f, 4.0f, 3.0f), palmTexture, glm::vec2(4.0f, 11.0f),
 
 MeshData grass = MeshComponent::loadModel("../assets/obj/grass.obj");
-std::shared_ptr<TextureImage> grassTexture = std::make_shared<TextureImage>(TextureComponent::loadTexture("../assets/textures/grassTexture.png"));
+std::shared_ptr&ltTextureImage&gt grassTexture = std::make_shared&ltTextureImage&gt(TextureComponent::loadTexture("../assets/textures/grassTexture.png"));
 Generation gen2(em, cm, h_map, grass, glm::vec3(3.0f, 7.5f, 3.0f), grassTexture, glm::vec2(16.0f, 25.0f), 70);</pre>
                 </div>
             </div>
@@ -1000,19 +1047,19 @@ Generation gen2(em, cm, h_map, grass, glm::vec3(3.0f, 7.5f, 3.0f), grassTexture,
 RenderSystem renderSystem(false, windowWidth, windowHeight);
 
 //OPE DEFAULT SHADERS RENDER SYSTEM//--------------------------------------------------------------
-std::shared_ptr<Shader> geometryShader = std::make_shared<Shader>("../shaders/vertex/geometrypassDeferredRendering.vs", "../shaders/fragment/geometrypassDeferredRendering.fs");
-std::shared_ptr<Shader> lightShader = std::make_shared<Shader>("../shaders/vertex/lightpassDeferredRendering.vs", "../shaders/fragment/lightpassDeferredRendering.fs");
-std::shared_ptr<Shader> shadowShader = std::make_shared<Shader>("../shaders/vertex/pointShadowPass.vs", "../shaders/fragment/pointShadowPass.fs", "../shaders/geometry/pointShadowPass.gs");
-std::shared_ptr<Shader> ssaoShader = std::make_shared<Shader>("../shaders/vertex/ssaoPass.vs", "../shaders/fragment/ssaoPass.fs");
-std::shared_ptr<Shader> ssaoBlurShader = std::make_shared<Shader>("../shaders/vertex/ssaoBlurPass.vs", "../shaders/fragment/ssaoBlurPass.fs");
-std::shared_ptr<Shader> skyboxShader = std::make_shared<Shader>("../shaders/vertex/skybox.vs", "../shaders/fragment/skybox.fs");
-std::shared_ptr<Shader> cloudShader = std::make_shared<Shader>("../shaders/vertex/cloudShader.vs", "../shaders/fragment/cloudShader.fs");
+std::shared_ptr&ltShader&gt geometryShader = std::make_shared&ltShader&gt("../shaders/vertex/geometrypassDeferredRendering.vs", "../shaders/fragment/geometrypassDeferredRendering.fs");
+std::shared_ptr&ltShader&gt lightShader = std::make_shared&ltShader&gt("../shaders/vertex/lightpassDeferredRendering.vs", "../shaders/fragment/lightpassDeferredRendering.fs");
+std::shared_ptr&ltShader&gt shadowShader = std::make_shared&ltShader&gt("../shaders/vertex/pointShadowPass.vs", "../shaders/fragment/pointShadowPass.fs", "../shaders/geometry/pointShadowPass.gs");
+std::shared_ptr&ltShader&gt ssaoShader = std::make_shared&ltShader&gt("../shaders/vertex/ssaoPass.vs", "../shaders/fragment/ssaoPass.fs");
+std::shared_ptr&ltShader&gt ssaoBlurShader = std::make_shared&ltShader&gt("../shaders/vertex/ssaoBlurPass.vs", "../shaders/fragment/ssaoBlurPass.fs");
+std::shared_ptr&ltShader&gt skyboxShader = std::make_shared&ltShader&gt("../shaders/vertex/skybox.vs", "../shaders/fragment/skybox.fs");
+std::shared_ptr&ltShader&gt cloudShader = std::make_shared&ltShader&gt("../shaders/vertex/cloudShader.vs", "../shaders/fragment/cloudShader.fs");
 
 //MAIN LOOP//--------------------------------------------------------------------------------------  
 renderSystem.render(em, cm, geometryShader, lightShader, shadowShader, ssaoShader, ssaoBlurShader, skyboxShader, cloudShader, skyboxManager, camera);
 
 //CUSTOM GEOMETRY SHADER//------------------------------------------------------------------------------------  
-std::shared_ptr<Shader> oceanShader = std::make_shared<Shader>("../shaders/vertex/oceanShader.vs", "../shaders/fragment/oceanShader.fs");
+std::shared_ptr&ltShader&gt oceanShader = std::make_shared&ltShader&gt("../shaders/vertex/oceanShader.vs", "../shaders/fragment/oceanShader.fs");
 
 cm.addComponent(ocean, CustomShaderComponent(oceanShader, TextureComponent(TextureComponent::loadTexture("../assets/heightmaps/image.png")), 
                                                           TextureComponent(TextureComponent::loadTexture("../assets/normalMaps/water_normal.jpg"))));</pre>
@@ -1023,53 +1070,261 @@ cm.addComponent(ocean, CustomShaderComponent(oceanShader, TextureComponent(Textu
                 <svg class="architecture-icon">
                     <use href="#loop-icon"></use>
                 </svg>
-                <span class="icon-title">BUCLE PRINCIPAL</span>
+                <span class="icon-title">PROGRAMA EJEMPLO</span>
             </button>
             <div class="collapsible-content">
                 <div class="code-block">
                     <pre>
-//MAIN LOOP//---------------------------------------------------------------------------------------
-while (window.isOpen()) {
+#include "ope/Window.hpp"
+#include "ope/Shader.hpp"
+#include "ope/Mesh.hpp"
+#include "ope/Texture.hpp"
+#include "ope/EngineSystem.hpp"
+#include "ope/Input.hpp" 
+#include "ope/Camera.hpp"
+#include "ope/ECSManager.hpp"
+#include "ope/Transform.hpp"
+#include "ope/Render.hpp"
+#include "ope/UIRenderer.hpp"
+#include "ope/Components.hpp"
+#include "ope/CharacterController.hpp"
+#include "ope/Light.hpp"
+#include "ope/Heightmap.hpp"
+#include "ope/Skybox.hpp"
+#include "ope/Generation.hpp"
 
-    window.clear(0.0f, 0.0f, 0.0f, 1.0f);
-    float deltaTime = system.getDeltaTime();
+int main() {
 
-    //INPUT-----------------------------------------------------------------------------------------
-    input.updateKeyStates();
-
-    //CAMERA----------------------------------------------------------------------------------------
-    camera.update(deltaTime);
-
-    //UPDATE----------------------------------------------------------------------------------------
-    TransformComponent* tc = cm.getComponent<TransformComponent>(light);
-    LightComponent* lc = cm.getComponent<LightComponent>(light);
-    ColorComponent* cc = cm.getComponent<ColorComponent>(h_map);
-
-    //RENDER----------------------------------------------------------------------------------------    
-    renderSystem.render(em, cm, geometryShader, lightShader, shadowShader, ssaoShader, ssaoBlurShader, 
-                        skyboxShader, cloudShader, skyboxManager, camera);
-
-    //HUD-------------------------------------------------------------------------------------------
-    ui.newFrame();
-
-    //Renderizar primero si el output final es en una textura
-    ui.renderWindow(renderSystem);
-
-    ui.entityViewer(em);
-    ui.renderTextureWindow(cm.getComponent<TextureComponent>(h_map)->ID);
-    ui.settingsWindow(camera, lc, renderSystem, renderSystem.textureType, renderSystem.bSkybox, 
-                        renderSystem.skyboxSelector, renderSystem.bClouds);
-
-    //CUSTOM WINDOW           
-    ImGui::Begin("FPS");
-    ImGui::Text("FPS: %.2f", system.displayFPS());
-    ImGui::End();
-
-    ui.endFrame();
-
-    window.swapBuffers();
-    window.pollEvents();
-}</pre>
+    //ENGINE//---------------------------------------------------------------------------------------
+    EngineSystem system;
+    
+    //WINDOW//---------------------------------------------------------------------------------------
+    int windowWidth = 800;
+    int windowHeight = 600;
+    
+    std::string window_name = "Main Window -- Terrain Demo";
+    
+    auto opt_window = Window::make(1022, 605, window_name, system);
+    if (!opt_window) {
+        std::cerr &lt;&lt; "Error: Failed to create window." &lt;&lt; std::endl;
+        return -1;
+    }
+    Window window = std::move(opt_window.value());
+    
+    window.makeContext(system);
+    
+    system.disableVSync();
+    
+    //INPUT//-----------------------------------------------------------------------------------------
+    Input input(window.getWindow());
+    
+    //UI//--------------------------------------------------------------------------------------------
+    UIRenderer ui(window.getWindow());
+    
+    //CAMERA//----------------------------------------------------------------------------------------
+    Camera camera(&input, glm::vec3(-90.0f, 150.0f, 130.0f),                // posición
+                    0.0f,                                                   // yaw
+                    -30.0f,                                                 // pitch
+                    75.0f,                                                  // fov (campo de visión)
+                    windowWidth / windowHeight,                             // relación de aspecto
+                    0.1f,                                                   // plano cercano
+                    15000.f);                                               // plano lejano
+    
+    //SYSTEMS//---------------------------------------------------------------------------------------------------                         
+    RenderSystem renderSystem(false, windowWidth, windowHeight);
+    
+    //HEIGHTMAP GENERATOR-----------------------------------------------------------------------------------
+    HeightmapGenerator heightmap(512, 512);
+    heightmap.generateHeightmap(0.01, 4, 0.4, 2.2);
+    heightmap.applyIslandMask(1.5);
+    heightmap.saveAsImage("../assets/heightmaps/a.png");
+    std::vector&lt;uint8_t&gt; colorMap = heightmap.generateColorMap();
+    heightmap.saveColorMapAsImage("../assets/heightmaps/a_colormap.png", colorMap, heightmap.width, heightmap.height);
+    
+    //SKYBOX//--------------------------------------------------------------------------------------------
+    SkyboxManager skyboxManager;
+    
+    skyboxManager.add({
+        "../assets/skyboxes/sunset/px.png",  // POSITIVE_X
+        "../assets/skyboxes/sunset/nx.png",  // NEGATIVE_X
+        "../assets/skyboxes/sunset/py.png",  // POSITIVE_Y
+        "../assets/skyboxes/sunset/ny.png",  // NEGATIVE_Y
+        "../assets/skyboxes/sunset/pz.png",  // POSITIVE_Z
+        "../assets/skyboxes/sunset/nz.png"   // NEGATIVE_Z
+    });
+    
+    skyboxManager.add({
+        "../assets/skyboxes/day/px.png",  // POSITIVE_X
+        "../assets/skyboxes/day/nx.png",  // NEGATIVE_X
+        "../assets/skyboxes/day/py.png",  // POSITIVE_Y
+        "../assets/skyboxes/day/ny.png",  // NEGATIVE_Y
+        "../assets/skyboxes/day/pz.png",  // POSITIVE_Z
+        "../assets/skyboxes/day/nz.png"   // NEGATIVE_Z
+    });
+    
+    skyboxManager.add({
+        "../assets/skyboxes/night/px.png",  // POSITIVE_X
+        "../assets/skyboxes/night/nx.png",  // NEGATIVE_X
+        "../assets/skyboxes/night/py.png",  // POSITIVE_Y
+        "../assets/skyboxes/night/ny.png",  // NEGATIVE_Y
+        "../assets/skyboxes/night/pz.png",  // POSITIVE_Z
+        "../assets/skyboxes/night/nz.png"   // NEGATIVE_Z
+    });
+    
+    skyboxManager.add({
+        "../assets/skyboxes/space/px.png",  // POSITIVE_X
+        "../assets/skyboxes/space/nx.png",  // NEGATIVE_X
+        "../assets/skyboxes/space/py.png",  // POSITIVE_Y
+        "../assets/skyboxes/space/ny.png",  // NEGATIVE_Y
+        "../assets/skyboxes/space/pz.png",  // POSITIVE_Z
+        "../assets/skyboxes/space/nz.png"   // NEGATIVE_Z
+    });
+    
+    //ECS//--------------------------------------------------------------------------------------------
+    EntityManager em;
+    ComponentManager cm;
+    
+    //CUSTOM SHADER---------------------------------------------------------------------------------------
+    std::shared_ptr&lt;Shader&gt; oceanShader = std::make_shared&lt;Shader&gt;("../shaders/vertex/oceanShader.vs", "../shaders/fragment/oceanShader.fs");
+    
+    //ENTITIES//---------------------------------------------------------------------------------------
+    
+    //Terrain//----------------------------------------------------------------------------------
+    TextureImage h_map_tex = TextureComponent::loadTexture("../assets/heightmaps/a.png");
+    Entity h_map = em.createEntity();
+    cm.addComponent(h_map, ColorComponent{ glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), true});
+    cm.addComponent(h_map, TransformComponent{
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.5f, 0.5f, 0.5f)
+        });
+    cm.addComponent(h_map, MeshComponent(MeshComponent::loadHeightMap(h_map_tex, 620.0f, 1.0f)));
+    cm.addComponent(h_map, TextureComponent(TextureComponent::loadTexture("../assets/heightmaps/a_colormap.png")));
+    
+    //Light//----------------------------------------------------------------------------------
+    Entity light = em.createEntity();
+    cm.addComponent(light, ColorComponent{ glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), false });
+    cm.addComponent(light, TransformComponent{ glm::vec3(0.0f, 200.0f, 65.0f),
+                                                glm::vec3(0.0f, 0.0f, 0.0f),
+                                                glm::vec3(1.0f, 1.0f, 1.0f) });
+    cm.addComponent(light, LightComponent(LightComponent::LightType::Spot,              // Light type
+                                                glm::vec3(0.5, -1.0f, 0.5f),            // direction
+                                                glm::vec3(0.5f, 0.5f, 0.5f),            // ambient
+                                                glm::vec3(1.0f, 0.0f, 0.0f),            // diffuse
+                                                glm::vec3(0.05f, 0.05f, 0.05f),         // specular
+                                                1.0f, 0.045f, 0.0075f,                  // attenuation constants
+                                                1.0, 0.95f,                             // cutoff angles
+                                                1.0f, 500.0f, 0.0001f));                // strenght, distance, bias
+    
+    Entity light2 = em.createEntity();
+    cm.addComponent(light2, ColorComponent{ glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), false });
+    cm.addComponent(light2, TransformComponent{ glm::vec3(250.0f, 200.0f, 250.0f),
+                                                glm::vec3(0.0f, 0.0f, 0.0f),
+                                                glm::vec3(1.0f, 1.0f, 1.0f) });
+    cm.addComponent(light2, LightComponent(LightComponent::LightType::Point,            // Light type
+                                                glm::vec3(0.5, -1.0f, 0.5f),            // direction
+                                                glm::vec3(0.5f, 0.5f, 0.5f),            // ambient
+                                                glm::vec3(1.0f, 1.0f, 1.0f),            // diffuse
+                                                glm::vec3(0.05f, 0.05f, 0.05f),         // specular
+                                                1.0f, 0.045f, 0.0075f,                  // attenuation constants
+                                                1.0, 0.95f,                             // cutoff angles
+                                                1.0f, 500.0f, 0.0001f));                // strenght, distance, bias
+    
+    //Ocean//------------------------------------------------------------------------------------
+    Entity ocean = em.createEntity();
+    cm.addComponent(ocean, ColorComponent{ glm::vec4(0.0f, 0.3f, 0.8f, 1.0f), false});
+    cm.addComponent(ocean, TransformComponent{
+            glm::vec3(128.0f, 2.0f, 128.0f),
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(128.0f, 1.0f, 128.0f)
+        });
+    cm.addComponent(ocean, MeshComponent(MeshComponent::loadModel("../assets/ocean/ocean_plane.obj")));
+    cm.addComponent(ocean, TextureComponent(TextureComponent::loadTexture("../assets/textures/water.png")));
+    cm.addComponent(ocean, CustomShaderComponent(oceanShader, TextureComponent(TextureComponent::loadTexture("../assets/heightmaps/water.png")), 
+                                                                TextureComponent(TextureComponent::loadTexture("../assets/normalMaps/water_normal.jpg"))));
+    
+    //GENERATION//------------------------------------------------------------------------------------
+    MeshData palm = MeshComponent::loadModel("../assets/obj/palm.obj");
+    std::shared_ptr&lt;TextureImage&gt; palmTexture = std::make_shared&lt;TextureImage&gt;(TextureComponent::loadTexture("../assets/textures/colormap.png"));
+    Generation gen(em, cm, h_map, palm, glm::vec3(3.0f, 4.0f, 3.0f), palmTexture, glm::vec2(4.0f, 11.0f), 20);
+    
+    MeshData grass = MeshComponent::loadModel("../assets/obj/grass.obj");
+    std::shared_ptr&lt;TextureImage&gt; grassTexture = std::make_shared&lt;TextureImage&gt;(TextureComponent::loadTexture("../assets/textures/colormap.png"));
+    Generation gen2(em, cm, h_map, grass, glm::vec3(3.0f, 7.5f, 3.0f), grassTexture, glm::vec2(16.0f, 25.0f), 70);
+    
+    MeshData wheat = MeshComponent::loadModel("../assets/obj/wheat.obj");
+    std::shared_ptr&lt;TextureImage&gt; wheatTexture = std::make_shared&lt;TextureImage&gt;(TextureComponent::loadTexture("../assets/textures/colormap.png"));
+    Generation gen3(em, cm, h_map, wheat, glm::vec3(3.0f, 7.5f, 3.0f), wheatTexture, glm::vec2(16.0f, 25.0f), 25);
+    
+    MeshData tree = MeshComponent::loadModel("../assets/obj/tree-tall.obj");
+    std::shared_ptr&lt;TextureImage&gt; treeTexture = std::make_shared&lt;TextureImage&gt;(TextureComponent::loadTexture("../assets/textures/colormap2.png"));
+    Generation gen4(em, cm, h_map, tree, glm::vec3(9.0f, 9.0f, 9.0f), treeTexture, glm::vec2(20.0f, 40.0f), 35);
+    
+    MeshData treeAutum = MeshComponent::loadModel("../assets/obj/tree-autumn.obj");
+    std::shared_ptr&lt;TextureImage&gt; treeAutumTexture = std::make_shared&lt;TextureImage&gt;(TextureComponent::loadTexture("../assets/textures/colormap2.png"));
+    Generation gen5(em, cm, h_map, treeAutum, glm::vec3(8.0f, 8.0f, 8.0f), treeAutumTexture, glm::vec2(25.0f, 80.0f), 35);
+    
+    MeshData rockSand = MeshComponent::loadModel("../assets/obj/rock-sand-a.obj");
+    std::shared_ptr&lt;TextureImage&gt; rockSandTexture = std::make_shared&lt;TextureImage&gt;(TextureComponent::loadTexture("../assets/textures/colormap2.png"));
+    Generation gen6(em, cm, h_map, rockSand, glm::vec3(10.0f, 10.0f, 10.0f), rockSandTexture, glm::vec2(5.0f, 10.0f), 25);
+    
+    MeshData lightHouse = MeshComponent::loadModel("../assets/obj/LightHouse.obj");
+    std::shared_ptr&lt;TextureImage&gt; lightHouseTexture = std::make_shared&lt;TextureImage&gt;(TextureComponent::loadTexture("../assets/textures/LightHouseTexture.png"));
+    Generation gen7(em, cm, h_map, lightHouse, glm::vec3(0.5f, 0.6f, 0.5f), lightHouseTexture, glm::vec2(10.0f, 15.0f), 1);
+    
+    //INIT SHADERS RENDER SYSTEM//---------------------------------------------------------------------------------------
+    std::shared_ptr&lt;Shader&gt; geometryShader = std::make_shared&lt;Shader&gt;("../shaders/vertex/geometrypassDeferredRendering.vs", "../shaders/fragment/geometrypassDeferredRendering.fs");
+    std::shared_ptr&lt;Shader&gt; lightShader = std::make_shared&lt;Shader&gt;("../shaders/vertex/lightpassDeferredRendering.vs", "../shaders/fragment/lightpassDeferredRendering.fs");
+    std::shared_ptr&lt;Shader&gt; pointShadowShader = std::make_shared&lt;Shader&gt;("../shaders/vertex/pointShadowPass.vs", "../shaders/fragment/pointShadowPass.fs", "../shaders/geometry/pointShadowPass.gs");
+    std::shared_ptr&lt;Shader&gt; spotShadowShader = std::make_shared&lt;Shader&gt;("../shaders/vertex/spotShadowPass.vs", "../shaders/fragment/spotShadowPass.fs");
+    std::shared_ptr&lt;Shader&gt; ssaoShader = std::make_shared&lt;Shader&gt;("../shaders/vertex/ssaoPass.vs", "../shaders/fragment/ssaoPass.fs");
+    std::shared_ptr&lt;Shader&gt; ssaoBlurShader = std::make_shared&lt;Shader&gt;("../shaders/vertex/ssaoBlurPass.vs", "../shaders/fragment/ssaoBlurPass.fs");
+    std::shared_ptr&lt;Shader&gt; skyboxShader = std::make_shared&lt;Shader&gt;("../shaders/vertex/skybox.vs", "../shaders/fragment/skybox.fs");
+    std::shared_ptr&lt;Shader&gt; cloudShader = std::make_shared&lt;Shader&gt;("../shaders/vertex/cloudShader.vs", "../shaders/fragment/cloudShader.fs");
+    
+    while (window.isOpen()) {
+    
+        window.clear(0.0f, 0.0f, 0.0f, 1.0f);
+    
+        float deltaTime = system.getDeltaTime();
+    
+        //INPUT---------------------------
+        input.updateKeyStates();
+    
+        //CAMERA--------------------------
+        camera.update(deltaTime);
+    
+        //UPDATE--------------------------
+        TransformComponent* tc = cm.getComponent&lt;TransformComponent&gt;(light);
+        LightComponent* lc = cm.getComponent&lt;LightComponent&gt;(light);
+        ColorComponent* cc = cm.getComponent&lt;ColorComponent&gt;(h_map);
+    
+        renderSystem.render(em, cm, geometryShader, lightShader, pointShadowShader, 
+                            spotShadowShader, ssaoShader, ssaoBlurShader,
+                            skyboxShader, cloudShader, skyboxManager, camera);
+    
+        //HUD-----------------------------
+        ui.newFrame();
+    
+        //RENDER-----------------------------
+        ui.renderWindow(renderSystem); // If the scene is rendered in a Texture
+    
+        ui.entityViewer(em);
+        ui.renderTextureWindow(cm.getComponent&lt;TextureComponent&gt;(h_map)->ID);
+        ui.settingsWindow(camera, lc, renderSystem, renderSystem.textureType, renderSystem.bSkybox, renderSystem.skyboxSelector, renderSystem.bClouds);
+    
+        ImGui::Begin("FPS");
+        ImGui::Text("FPS: %.2f", system.displayFPS());
+        ImGui::End();
+    
+        ui.endFrame();
+    
+        window.swapBuffers();
+        window.pollEvents();
+    }
+    
+    return 0;
+ }</pre>
                 </div>
             </div>
 
@@ -1890,16 +2145,16 @@ while (window.isOpen()) {
         
         <section id="descargas">
             <h2>Instalación</h2>
-            
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <h3>Pasos para la instalación</h3>
-                    <ol>
-                        <li>Ejecuta tools\gendeps.bat para generar las dependencias.</li>
-                        <li>Ejecuta tools\genproject.bat para crear la solución de Visual Studio.</li>
-                    </ol>
+                <div class="download-section">
+                    <h3>Descargar OPEngine</h3>
+                    <li>1º Ejecuta <strong>tools\gendeps.bat</strong> para generar las dependencias.</li>
+                    <li>2º Ejecuta <strong>tools\genproject.bat</strong> para crear la solución de Visual Studio.</li>
+                    <a href="OPEngine_0.1.zip" class="btn download-btn">
+                        <i class="download-icon"></i>
+                        Descargar OPEngine v0.1
+                    </a>
+                    <p class="download-info">Tamaño: 8.2 MB • Última actualización: 26 Marzo 2025</p>
                 </div>
-            </div>
         </section>
     </main>
     
