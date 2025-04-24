@@ -1070,6 +1070,66 @@ cm.addComponent(ocean, CustomShaderComponent(oceanShader, TextureComponent(Textu
                 <svg class="architecture-icon">
                     <use href="#loop-icon"></use>
                 </svg>
+                <span class="icon-title">SISTEMA DE FÍSICA</span>
+            </button>
+            <div class="collapsible-content">
+                <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">El sistema de física proporciona simulación de cuerpos rígidos con detección de colisiones. Para añadir propiedades físicas a una entidad, es necesario agregar un componente <strong>[PhysicsComponent]</strong> a la misma. Posteriormente, se debe registrar la entidad en el sistema de física usando <strong>[physicsSystem.addEntityToPhysics(entity, cm)]</strong>.</p>
+            
+                <p style="text-align: justify; margin-top: 20px; margin-bottom: 20px;">El sistema de física utiliza una estructura Octree para optimizar la detección de colisiones, permitiendo manejar grandes cantidades de objetos de manera eficiente. La detección de colisiones se realiza primero a nivel de cajas delimitadoras (AABB) y luego, si es necesario, a nivel de triángulos para mayor precisión.</p>
+                
+                <div class="code-block">
+                    <pre>
+            //INICIALIZAR SISTEMA DE FÍSICA//--------------------------------------------------------------------
+            PhysicsSystem physicsSystem;
+            physicsSystem.initialize();
+            physicsSystem.setGravity(glm::vec3(0.0f, -9.81f, 0.0f));
+            
+            //AÑADIR COMPONENTE DE FÍSICA A UNA ENTIDAD//--------------------------------------------------------
+            Entity cube = em.createEntity();
+            cm.addComponent(cube, TransformComponent{ glm::vec3(0.0f, 10.0f, 0.0f),
+                                                     glm::vec3(0.0f, 0.0f, 0.0f),
+                                                     glm::vec3(1.0f, 1.0f, 1.0f) });
+            cm.addComponent(cube, MeshComponent(MeshComponent::loadModel("../assets/obj/cube.obj")));
+            cm.addComponent(cube, ColorComponent{ glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), true });
+            
+            // Agregar física con propiedades personalizadas
+            PhysicsComponent physComp;
+            physComp.mass = 2.0f;
+            physComp.restitution = 0.7f;
+            physComp.friction = 0.3f;
+            cm.addComponent(cube, physComp);
+            
+            // Registrar la entidad en el sistema de física
+            physicsSystem.addEntityToPhysics(cube, cm);
+            
+            //CREAR SUELO ESTÁTICO//---------------------------------------------------------------------------
+            Entity ground = em.createEntity();
+            cm.addComponent(ground, TransformComponent{ glm::vec3(0.0f, 0.0f, 0.0f),
+                                                       glm::vec3(0.0f, 0.0f, 0.0f),
+                                                       glm::vec3(20.0f, 0.1f, 20.0f) });
+            cm.addComponent(ground, MeshComponent(MeshComponent::loadModel("../assets/obj/plane.obj")));
+            cm.addComponent(ground, ColorComponent{ glm::vec4(0.2f, 0.2f, 0.8f, 1.0f), true });
+            cm.addComponent(ground, PhysicsComponent());
+            
+            // Registrar como objeto estático (no se mueve)
+            physicsSystem.addEntityToPhysics(ground, cm, true);
+            
+            //MAIN LOOP//--------------------------------------------------------------------------------------
+            while (window.isOpen()) {
+                float deltaTime = system.getDeltaTime();
+                
+                // Actualizar la simulación física
+                physicsSystem.update(em, cm, deltaTime);
+                
+                // Resto del bucle principal...
+            }</pre>
+                </div>
+            </div>
+
+            <button class="collapsible">
+                <svg class="architecture-icon">
+                    <use href="#loop-icon"></use>
+                </svg>
                 <span class="icon-title">PROGRAMA EJEMPLO</span>
             </button>
             <div class="collapsible-content">
@@ -1406,6 +1466,31 @@ return 0;
                     <th>Descripción</th>
                 </tr>
 
+                <tr class="expandable-row" onclick="toggleDetails('aabb')">
+                    <td>AABB</td>
+                    <td>Estructura para representar una caja delimitadora alineada con los ejes</td>
+                </tr>
+                <tr id="aabb" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>min</code> - Vector 3D con las coordenadas mínimas de la caja</li>
+                                <li><code>max</code> - Vector 3D con las coordenadas máximas de la caja</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>AABB()</code> - Constructor por defecto</li>
+                                <li><code>AABB(min, max)</code> - Constructor con puntos mínimo y máximo</li>
+                                <li><code>intersects(other)</code> - Verifica intersección con otra AABB</li>
+                                <li><code>getCenter()</code> - Obtiene el centro de la caja</li>
+                                <li><code>getDimensions()</code> - Obtiene las dimensiones de la caja</li>
+                                <li><code>transform(transform)</code> - Aplica una transformación a la AABB</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
                 <tr class="expandable-row" onclick="toggleDetails('branching')">
                     <td>Branching</td>
                     <td>Estructura para gestión de ramas de audio</td>
@@ -1634,9 +1719,9 @@ return 0;
                                 <li><code>forwardRender(em, componentManager, lightShader, shadowShader, camera, lightSpaceMatrix, skyboxShader, skyboxManager)</code> - Renderiza la escena</li>
                                 <li><code>renderEntities(em, componentManager, shader, colorVector)</code> - Método privado que renderiza las entidades con los componentes necesarios</li>
                                 <li><code>GetLightSpaceMatrix(lightPos, lightType, lightDirection)</code> - Obtiene la matriz de luz</li>
-                                <li><code>createShadowMapCube(resolution)</code> - Crea un mapa de sombras cúbico</li>
+                                <li><code>CreatePointShadowMap(resolution)</code> - Crea un mapa de sombras cúbico</li>
                                 <li><code>CreateSpotLightShadowMap()</code> - Crea mapa de sombras para spotlight</li>
-                                <li><code>SetupDirectionalShadowMap()</code> - Configura el mapa de sombras para luces direccionales</li>
+                                <li><code>CreateDirectionalShadowMap()</code> - Configura el mapa de sombras para luces direccionales</li>
                             </ul>
                             </ul>
                         </div>
@@ -1815,6 +1900,35 @@ return 0;
                     </td>
                 </tr>
 
+                <tr class="expandable-row" onclick="toggleDetails('octreeNode')">
+                    <td>OctreeNode</td>
+                    <td>Nodo de un Octree para optimizar la detección de colisiones espaciales</td>
+                </tr>
+                <tr id="octreeNode" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>bounds</code> - Límites del nodo (AABB)</li>
+                                <li><code>depth</code> - Profundidad del nodo en el árbol</li>
+                                <li><code>MAX_DEPTH</code> - Profundidad máxima del Octree (8)</li>
+                                <li><code>MAX_ENTITIES_PER_NODE</code> - Entidades máximas por nodo (16)</li>
+                                <li><code>entities</code> - Entidades almacenadas en este nodo</li>
+                                <li><code>children</code> - Nodos hijos (8 o ninguno)</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>OctreeNode(bounds, depth)</code> - Constructor</li>
+                                <li><code>insert(entity, aabb)</code> - Inserta una entidad con su AABB</li>
+                                <li><code>queryPotentialCollisions(entity, aabb)</code> - Consulta colisiones potenciales</li>
+                                <li><code>clear()</code> - Limpia el Octree</li>
+                                <li><code>subdivide()</code> - Divide este nodo en 8 nodos hijos</li>
+                                <li><code>getChildIndexForAABB(aabb)</code> - Determina el nodo hijo para una AABB</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
                 <tr class="expandable-row" onclick="toggleDetails('perlinNoise')">
                     <td>PerlinNoise</td>
                     <td>Generador de ruido Perlin para terrenos</td>
@@ -1833,6 +1947,93 @@ return 0;
                                 <li><code>fade(t)</code> - Función de interpolación suavizada</li>
                                 <li><code>lerp(t, a, b)</code> - Interpolación lineal</li>
                                 <li><code>grad(hash, x, y, z)</code> - Función de gradiente</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('physicsComponent')">
+                    <td>PhysicsComponent</td>
+                    <td>Componente para manejar propiedades físicas de entidades</td>
+                </tr>
+                <tr id="physicsComponent" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables de traslación:</h3>
+                            <ul>
+                                <li><code>velocity</code> - Velocidad actual del objeto</li>
+                                <li><code>prevPosition</code> - Posición anterior (para integración de Verlet)</li>
+                                <li><code>acceleration</code> - Aceleración actual</li>
+                            </ul>
+                            <h3>Propiedades físicas:</h3>
+                            <ul>
+                                <li><code>mass</code> - Masa del objeto</li>
+                                <li><code>inverseMass</code> - Inversa de la masa (para cálculos de colisión)</li>
+                                <li><code>restitution</code> - Coeficiente de restitución (elasticidad)</li>
+                                <li><code>friction</code> - Coeficiente de fricción</li>
+                                <li><code>isStatic</code> - Si es true, el objeto no se mueve pero colisiona</li>
+                                <li><code>useGravity</code> - Si es true, se aplica gravedad al objeto</li>
+                            </ul>
+                            <h3>Propiedades de colisión:</h3>
+                            <ul>
+                                <li><code>boundingBox</code> - Caja delimitadora (AABB) para detección de colisiones</li>
+                                <li><code>triangles</code> - Triángulos para colisiones precisas</li>
+                            </ul>
+                            <h3>Propiedades de rotación:</h3>
+                            <ul>
+                                <li><code>angularVelocity</code> - Velocidad angular (radianes/segundo)</li>
+                                <li><code>torque</code> - Torque aplicado al objeto</li>
+                                <li><code>orientation</code> - Orientación actual (quaternion)</li>
+                                <li><code>prevOrientation</code> - Orientación anterior</li>
+                                <li><code>inertiaTensor</code> - Tensor de inercia en espacio de modelo</li>
+                                <li><code>inverseInertiaTensor</code> - Inverso del tensor de inercia</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>PhysicsComponent()</code> - Constructor que inicializa todas las propiedades</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="expandable-row" onclick="toggleDetails('physicsSystem')">
+                    <td>PhysicsSystem</td>
+                    <td>Sistema que maneja la simulación física y detección de colisiones</td>
+                </tr>
+                <tr id="physicsSystem" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>octree</code> - Octree para optimizar la detección de colisiones</li>
+                                <li><code>gravity</code> - Vector de gravedad para el mundo</li>
+                                <li><code>fixedTimeStep</code> - Paso de tiempo fijo para la simulación</li>
+                            </ul>
+                            <h3>Métodos públicos:</h3>
+                            <ul>
+                                <li><code>PhysicsSystem()</code> - Constructor</li>
+                                <li><code>initialize()</code> - Inicializa el sistema de física</li>
+                                <li><code>update(em, cm, deltaTime)</code> - Actualiza la simulación de física</li>
+                                <li><code>addEntityToPhysics(entity, cm, isStatic)</code> - Añade una entidad al sistema</li>
+                                <li><code>removeEntityFromPhysics(entity)</code> - Remueve una entidad del sistema</li>
+                                <li><code>setGravity(gravity)</code> - Configura la gravedad del mundo</li>
+                                <li><code>getGravity()</code> - Obtiene la gravedad actual</li>
+                            </ul>
+                            <h3>Métodos privados:</h3>
+                            <ul>
+                                <li><code>updateAABBs(em, cm)</code> - Actualiza las AABBs de todas las entidades</li>
+                                <li><code>detectCollisions(em, cm)</code> - Detecta colisiones entre entidades</li>
+                                <li><code>resolveCollisions(em, cm)</code> - Resuelve las colisiones detectadas</li>
+                                <li><code>applyVerletIntegration(entity, physics, transform, deltaTime)</code> - Aplica integración de Verlet</li>
+                                <li><code>createAABBFromMesh(mesh, transform)</code> - Crea una AABB a partir de los vértices</li>
+                                <li><code>triangleTriangleCollision(t1, t2, point, normal, depth)</code> - Detecta colisión entre triángulos</li>
+                                <li><code>aabbCollision(box1, box2)</code> - Detecta colisión entre dos AABBs</li>
+                                <li><code>extractTrianglesFromMesh(mesh, transform)</code> - Extrae triángulos de una malla</li>
+                                <li><code>calculatePenetrationDepth(box1, box2)</code> - Calcula profundidad de penetración</li>
+                                <li><code>calculateInertiaTensor(physics, mesh)</code> - Calcula tensor de inercia</li>
+                                <li><code>alignToGround(physics, transform)</code> - Alinea objetos con el suelo</li>
+                                <li><code>applyImpulseAtPoint(physics, impulse, point, centerOfMass)</code> - Aplica impulso en un punto</li>
+                                <li><code>calculateWorldInertiaTensor(physics)</code> - Calcula tensor de inercia en espacio mundial</li>
                             </ul>
                         </div>
                     </td>
@@ -2123,6 +2324,28 @@ return 0;
                     </td>
                 </tr>
 
+                <tr class="expandable-row" onclick="toggleDetails('triangle')">
+                    <td>Triangle</td>
+                    <td>Estructura para representar un triángulo en el espacio 3D</td>
+                </tr>
+                <tr id="triangle" class="details-row">
+                    <td colspan="2">
+                        <div class="details-content">
+                            <h3>Variables:</h3>
+                            <ul>
+                                <li><code>v0, v1, v2</code> - Los tres vértices del triángulo</li>
+                            </ul>
+                            <h3>Métodos:</h3>
+                            <ul>
+                                <li><code>Triangle()</code> - Constructor por defecto</li>
+                                <li><code>Triangle(v0, v1, v2)</code> - Constructor con los tres vértices</li>
+                                <li><code>getNormal()</code> - Calcula la normal del triángulo</li>
+                                <li><code>getAABB()</code> - Calcula la caja delimitadora del triángulo</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
                 <tr class="expandable-row" onclick="toggleDetails('uiRenderer')">
                     <td>UIRenderer</td>
                     <td>Sistema de interfaz de usuario con ImGui</td>
@@ -2211,11 +2434,11 @@ return 0;
                     <h3>Descargar OPEngine</h3>
                     <li>1º Ejecuta <strong>tools\gendeps.bat</strong> para generar las dependencias.</li>
                     <li>2º Ejecuta <strong>tools\genproject.bat</strong> para crear la solución de Visual Studio.</li>
-                    <a href="OPEngine_0.1.zip" class="btn download-btn">
+                    <a href="OPEngine_0.2.zip" class="btn download-btn">
                         <i class="download-icon"></i>
-                        Descargar OPEngine v0.1
+                        Descargar OPEngine v0.2
                     </a>
-                    <p class="download-info">Tamaño: 8.2 MB • Última actualización: 26 Marzo 2025</p>
+                    <p class="download-info">Tamaño: 12 MB • Última actualización: 24 Abril 2025</p>
                 </div>
         </section>
     </main>
